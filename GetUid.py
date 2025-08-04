@@ -9,7 +9,7 @@ white_file = os.path.join(base_dir, 'list', 'white')
 black_file = os.path.join(base_dir, 'list', 'black')
 keywords_file = os.path.join(base_dir, 'list', 'keywords')
 ########################################################################################################################
-uid_file = os.path.join(base_dir, 'list', 'uid.txt')
+uid_file = os.path.join(base_dir, 'list', 'uid')
 env_file = os.path.join(base_dir, '.env')
 load_dotenv(dotenv_path=env_file)
 proxies = {'http': None, 'https': None}
