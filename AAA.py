@@ -76,7 +76,7 @@ driver.quit()
 
 
 set_key(env_file, 'UA', UA)
-set_key(env_file, 'reportor', COOKIE)
+set_key(env_file, 'reporter', COOKIE)
 
 
 
