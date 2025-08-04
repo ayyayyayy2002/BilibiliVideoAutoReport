@@ -13,7 +13,7 @@ def proxy():
     current_proxy = data.get("now")
 
     print("当前代理:", current_proxy)
-    print("所有可选代理:", proxies)
+    #print("所有可选代理:", proxies)
 
     # 去掉前两个和后五个（如果有必要）
     proxies = proxies[2:-6]
