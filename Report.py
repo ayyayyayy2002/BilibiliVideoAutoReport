@@ -144,6 +144,7 @@ for uid in uids:
 
             elif "412" in response.text:
                 proxy()
+            print(f'视频{reportcount:03}:{response.text}')
 
             with open(aid_log_file, 'a', encoding='utf-8') as file:
                 file.write(f'{enc(int(aid))},{tid}，{title}\n')
