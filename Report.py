@@ -1,13 +1,12 @@
 from dotenv import load_dotenv, set_key
 from datetime import datetime
-from Capcha import capcha
-from AVtoBV import enc
+from capcha import capcha
+from src.avtobv import enc
 import requests
 import random
 import re
 import os
-
-from Proxy import proxy
+from src.proxy import proxy
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 ########################################################################################################################
@@ -140,15 +139,15 @@ for uid in uids:
                 os.environ["reporter"] = COOKIE
                 set_key(env_file, "reporter", COOKIE)
 
-
-
             elif "412" in response.text:
                 proxy()
-            print(f'视频{reportcount:03}:{response.text}')
+            else:
+                print(f'视频{reportcount:03}:{response.text}')
 
             with open(aid_log_file, 'a', encoding='utf-8') as file:
                 file.write(f'{enc(int(aid))},{tid}，{title}\n')
-        except Exception:
+        except Exception as e:
+            print(e)
             proxy()
 
 
