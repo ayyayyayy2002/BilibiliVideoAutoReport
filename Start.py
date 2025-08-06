@@ -3,7 +3,7 @@ import subprocess
 import sys
 import os
 
-from Proxy import proxy
+from src.proxy import proxy
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 ########################################################################################################################
