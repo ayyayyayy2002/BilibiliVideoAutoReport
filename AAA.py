@@ -4,30 +4,18 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from dotenv import load_dotenv, set_key
 from selenium import webdriver
-import qrcode
 import time
 import re
 import os
-
-
 ########################################################################################################################
 proxies = {'http': None, 'https': None}
 base_dir = os.path.dirname(os.path.abspath(__file__))
 chrome_binary_path = os.path.join(base_dir, 'chrome-win', 'chrome.exe')
 chrome_driver_path = os.path.join(base_dir, 'chrome-win', 'chromedriver.exe')
-env_file = os.path.join(base_dir, '.env')
-load_dotenv(dotenv_path=env_file)
-
-
-
-
-
-
-
-
-
-
 user_data_dir = os.path.join(base_dir, 'User Data','Reporter')
+env_file = os.path.join(base_dir, '.env')
+########################################################################################################################
+load_dotenv(dotenv_path=env_file)
 options = webdriver.ChromeOptions()
 options.binary_location = chrome_binary_path
 options.add_argument("--disable-blink-features=AutomationControlled")
@@ -48,12 +36,6 @@ try:
         EC.presence_of_element_located(
             (By.XPATH, '//*[@id="app-main"]/div/div[2]/div[1]/div[2]/div[1]/div'))
     )
-    title = element.get_attribute('title')
-    qr = qrcode.QRCode()
-    qr.add_data(title)
-    qr.make()
-    qr.print_ascii(out=None, tty=False, invert=False)
-
 except Exception as e:
     print('无法获取二维码元素')
 
@@ -103,12 +85,6 @@ try:
         EC.presence_of_element_located(
             (By.XPATH, '//*[@id="app-main"]/div/div[2]/div[1]/div[2]/div[1]/div'))
     )
-    title = element.get_attribute('title')
-    qr = qrcode.QRCode()
-    qr.add_data(title)
-    qr.make()
-    qr.print_ascii(out=None, tty=False, invert=False)
-
 except Exception as e:
     print('无法获取二维码元素')
 
