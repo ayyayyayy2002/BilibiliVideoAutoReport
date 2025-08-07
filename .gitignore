@@ -1,0 +1,9 @@
+/.idea/
+/venv/
+.env
+*.txt
+*.pyc
+/chrome-win
+/User Data
+/python-3.10.11
+/User Data/Reporter
