@@ -1,0 +1,5 @@
+/.idea/
+*.txt
+*.pyc
+/chrome-win
+/python-3.10.11
