@@ -111,7 +111,7 @@ def report():
                 'attach': pic,
                 'block_author': 'false',
                 'csrf': CSRF,
-                'desc': 'reason',
+                'desc': reason,
                 'tid': f'{tid}'
             }
             try:
