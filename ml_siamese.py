@@ -4,15 +4,19 @@ from ml_load import load_siamese
 
 # ===== 工具函数 =====
 def preprocess(img, target_size=(105, 105)):
-
     import cv2
     import numpy as np
 
+    # 1. 统一缩放到 105×105
     img = cv2.resize(img, target_size, interpolation=cv2.INTER_LANCZOS4)
-    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype(np.float32) / 255.0
-    img3 = np.stack([gray, gray, gray], axis=0)  # (3,H,W)
-    return img3
 
+    # 2. 归一化到 0-1，保持 RGB 三通道
+    img = img.astype(np.float32) / 255.0
+
+    # 3. HWC → CHW（3, 105, 105）
+    img = img.transpose(2, 0, 1)
+
+    return img
 
 def run_siamese(a_imgs, b_imgs,SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
     """输入多张 A 图像对象、多张 B 图像对象，输出二维数组：
