@@ -1,4 +1,4 @@
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from dotenv import load_dotenv, set_key
@@ -19,7 +19,7 @@ def setup():
 
     try:
         element = WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located(
+            expected_conditions.presence_of_element_located(
                 (By.XPATH, '//*[@id="app-main"]/div/div[2]/div[1]/div[2]/div[1]/div'))
         )
     except Exception as e:
@@ -45,7 +45,7 @@ def setup():
 
     try:
         element = WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located(
+            expected_conditions.presence_of_element_located(
                 (By.XPATH, '//*[@id="app-main"]/div/div[2]/div[1]/div[2]/div[1]/div'))
         )
     except Exception as e:
