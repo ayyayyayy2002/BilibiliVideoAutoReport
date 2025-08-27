@@ -1,3 +1,4 @@
+from main_benchmark import benchmark
 from main_check import check
 from main_getuid import getuid
 from main_report import report
@@ -12,6 +13,7 @@ def main():
     print("3. getuid()")
     print("4. report()")
     print("5. check()")
+    print("6. benchmark()")
 
     choice = input("请输入：")
 
@@ -26,6 +28,8 @@ def main():
         report()
     elif choice == "5":
         check()
+    elif choice == "6":
+        benchmark()
     else:
         print("输入无效")
 
