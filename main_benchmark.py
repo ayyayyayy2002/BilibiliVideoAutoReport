@@ -63,7 +63,7 @@ def benchmark():
                     time.sleep(0.5)
                 print(attempt)
                 url = re.search(r'url\("([^"]+?)\?[^"]*"\);', f).group(1)
-                content = requests.get(url, timeout=(5, 10)).content
+                content = requests.get(url, timeout=(5, 10),proxies=None).content
 
                 # 将 bytes 转为 NumPy 数组
                 nparr = numpy.frombuffer(content, numpy.uint8)
@@ -76,6 +76,7 @@ def benchmark():
                 classA, classB = run_yolo(img, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS)
                 cropped_A, cropped_B = crop_detections(img, classA, classB)
                 results_2d = run_siamese(cropped_A, cropped_B, SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
+                print(results_2d)
                 selected = []
                 for row in results_2d:
                     max_idx = row.index(max(row))  # 找到每行最大值的索引
