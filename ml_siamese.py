@@ -9,10 +9,8 @@ def preprocess(img, target_size=(105, 105)):
 
     # 1. 统一缩放到 105×105
     img = cv2.resize(img, target_size, interpolation=cv2.INTER_LANCZOS4)
-
     # 2. 归一化到 0-1，保持 RGB 三通道
     img = img.astype(np.float32) / 255.0
-
     # 3. HWC → CHW（3, 105, 105）
     img = img.transpose(2, 0, 1)
 
