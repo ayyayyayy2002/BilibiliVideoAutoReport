@@ -23,7 +23,7 @@ def benchmark():
     YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS = load_yolo(yolo_file)
     SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS = load_siamese(siamese_file)
     user_data_dir = os.path.join(base_dir, 'chrome-win', 'Benchmarker')
-    driver = start_chrome(user_data_dir, False, None)
+    driver = start_chrome(user_data_dir, True, None)
     while True:
         try:
 
@@ -74,14 +74,27 @@ def benchmark():
 
                 # 传入 run_yolo
                 classA, classB = run_yolo(img, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS)
+                print("\n类别A:")
+                if classA:
+                    for i, d in enumerate(classA, 1):
+                        print(
+                            f"  {i}. x={d['x']:.1f}, y={d['y']:.1f}, w={d['w']:.1f}, h={d['h']:.1f}, conf={d['conf']:.2f}")
+                else:
+                    print("  无检测到目标")
+
+                print("\n类别B:")
+                if classB:
+                    for i, d in enumerate(classB, 1):
+                        print(
+                            f"  {i}. x={d['x']:.1f}, y={d['y']:.1f}, w={d['w']:.1f}, h={d['h']:.1f}, conf={d['conf']:.2f}")
+                else:
+                    print("  无检测到目标")
                 cropped_A, cropped_B = crop_detections(img, classA, classB)
                 results_2d = run_siamese(cropped_A, cropped_B, SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
-                print(results_2d)
                 selected = []
                 for row in results_2d:
                     max_idx = row.index(max(row))  # 找到每行最大值的索引
                     selected.append(classB[max_idx])
-                print(selected)
                 img_elem = driver.find_element(By.CLASS_NAME, 'geetest_big_item')
 
                 # 元素宽度（正方形，宽=高）
