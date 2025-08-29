@@ -48,18 +48,20 @@ def capcha(aid, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
             url = f"https://www.bilibili.com/appeal/?avid={aid}"
             driver.get(url)
 
+
             WebDriverWait(driver, 20, 1).until(
                 EC.presence_of_element_located(
-                    (By.XPATH, '/html/body/div/div/div[2]/div[1]/div[2]/div[1]/div'))
+                    (By.XPATH, '/html/body/div/div[2]/div[1]/div[2]/div[1]/div/div/div[2]'))
             ).click()
+
             WebDriverWait(driver, 20, 1).until(
-                EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div[3]/div[2]/textarea'))
+                EC.presence_of_element_located((By.XPATH, '/html/body/div/div[2]/div[1]/div[2]/div[1]/div[2]/label/div[2]/textarea'))
             ).send_keys('视频封面标题以及内容违规')
 
             while True:
                 # 点击确认
                 WebDriverWait(driver, 20, 1).until(
-                    EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div[5]/div[2]'))
+                    EC.presence_of_element_located((By.XPATH, '/html/body/div/div[3]/div[2]'))
                 ).click()
 
                 try:
