@@ -100,13 +100,13 @@ def capcha(aid, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
 
                 # 传入 run_yolo
                 classA, classB = run_yolo(img,YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS)
+
                 cropped_A, cropped_B = crop_detections(img, classA, classB)
                 results_2d = run_siamese(cropped_A, cropped_B,SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
                 selected = []
                 for row in results_2d:
                     max_idx = row.index(max(row))  # 找到每行最大值的索引
                     selected.append(classB[max_idx])
-                print(selected)
                 img_elem = driver.find_element(By.CLASS_NAME, 'geetest_big_item')
 
                 # 元素宽度（正方形，宽=高）
