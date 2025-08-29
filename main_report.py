@@ -24,6 +24,7 @@ def report():
     COOKIE = os.getenv("reporter")
     proxy = os.getenv('PROXY')
     reason=os.getenv('reason')
+    group = os.getenv('group')
     CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
     proxies = {
         'http': proxy,
@@ -135,7 +136,7 @@ def report():
 
                 elif "412" in response.text:
                     print('报错412，切换代理')
-                    switch_proxy()
+                    switch_proxy(group)
                 else:
                     print(f'视频{reportcount:03}:{response.text}')
 
@@ -143,7 +144,7 @@ def report():
                     file.write(f'{enc(int(aid))},{tid}，{title}\n')
             except Exception as e:
                 print(e)
-                switch_proxy()
+                switch_proxy(group)
 
         try:
             with open(uid_file, 'r', encoding='utf-8') as f:
