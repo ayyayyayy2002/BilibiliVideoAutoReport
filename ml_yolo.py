@@ -82,5 +82,16 @@ if __name__ == "__main__":
     for img_path in ["aaa.jpg", "bbb.jpg"]:
         img = cv2.imread(img_path)[:, :, ::-1]  # BGR -> RGB
         classA, classB = run_yolo(img)
-        print(img_path, "类别A:", classA)
-        print(img_path, "类别B:", classB)
+        print("\n类别A:")
+        if classA:
+            for i, d in enumerate(classA, 1):
+                print(f"  {i}. x={d['x']:.1f}, y={d['y']:.1f}, w={d['w']:.1f}, h={d['h']:.1f}, conf={d['conf']:.2f}")
+        else:
+            print("  无检测到目标")
+
+        print("\n类别B:")
+        if classB:
+            for i, d in enumerate(classB, 1):
+                print(f"  {i}. x={d['x']:.1f}, y={d['y']:.1f}, w={d['w']:.1f}, h={d['h']:.1f}, conf={d['conf']:.2f}")
+        else:
+            print("  无检测到目标")
