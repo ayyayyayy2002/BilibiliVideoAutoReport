@@ -2,17 +2,11 @@ import requests
 
 CLASH_API_URL = "http://127.0.0.1:9090"
 
-def switch_proxy():
-    # 设置为 Global 模式
-    mode_url = f"{CLASH_API_URL}/configs"
-    res = requests.patch(mode_url, json={"mode": "global"})
-    if res.status_code == 204:
-        print("已切换为 Global 模式。")
-    else:
-        print("切换 Global 模式失败:", res.text)
+def switch_proxy(GROUP):
+
 
     # 获取 GLOBAL 策略组信息
-    group_url = f"{CLASH_API_URL}/proxies/GLOBAL"
+    group_url = f"{CLASH_API_URL}/proxies/{GROUP}"
     response = requests.get(group_url)
     data = response.json()
 
@@ -43,7 +37,7 @@ def switch_proxy():
     print(f"切换到下一个代理: {next_proxy}")
 
     # 切换代理
-    put_url = f"{CLASH_API_URL}/proxies/GLOBAL"
+    put_url = f"{CLASH_API_URL}/proxies/{GROUP}"
     res = requests.put(put_url, json={"name": next_proxy})
     if res.status_code == 204:
         print("代理切换成功！")
@@ -56,4 +50,4 @@ def switch_proxy():
 
 # 直接调用
 if __name__ == "__main__":
-    proxy()
+    switch_proxy("哔哩哔哩")
