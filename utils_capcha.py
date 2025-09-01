@@ -11,6 +11,7 @@ import requests
 import time
 import re
 import os
+from urllib.parse import urlparse, unquote
 from utils_chrome import start_chrome
 
 
@@ -143,10 +144,19 @@ def capcha(aid, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                     WebDriverWait(driver, 3).until(
                         EC.invisibility_of_element_located((By.XPATH, '//*[@class="geetest_item_wrap"]')))
                     print("验证码已消失！")  # 等待 'geetest_item_wrap' 元素消失，表示验证码提交成功
+                    fname = os.path.basename(urlparse(unquote(url)).path)  # 去掉 query，取原始文件名
+                    file_path = os.path.join(base_dir, 'captcha', 'true', fname)
+                    with open(file_path, 'wb') as fp:
+                        fp.write(content)
                     time.sleep(2)
+
                     break
                 except Exception as e:
                     print('验证码未消失')
+                    fname = os.path.basename(urlparse(unquote(url)).path)  # 去掉 query，取原始文件名
+                    file_path = os.path.join(base_dir, 'captcha', 'false', fname)
+                    with open(file_path, 'wb') as fp:
+                        fp.write(content)
 
             break
         except Exception as e:
