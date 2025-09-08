@@ -86,7 +86,11 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                     time.sleep(0.5)
                 print(attempt)
                 url = re.search(r'url\("([^"]+?)\?[^"]*"\);', f).group(1)
-                content = requests.get(url, timeout=(5, 10),proxies=None).content
+                proxies = {
+                    "http": None,
+                    "https": None
+                }
+                content = requests.get(url, timeout=(5, 10),proxies=proxies).content
 
                 # 将 bytes 转为 NumPy 数组
                 nparr = numpy.frombuffer(content, numpy.uint8)
