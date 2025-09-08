@@ -1,6 +1,5 @@
 import numpy
 import cv2
-from dotenv import load_dotenv
 from ml_siamese import run_siamese
 from ml_yolo import run_yolo
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,7 +11,6 @@ import time
 import re
 import os
 from urllib.parse import urlparse, unquote
-from utils_chrome import start_chrome
 
 
 def crop_detections(img, classA, classB):
@@ -34,14 +32,12 @@ def crop_detections(img, classA, classB):
     return cropped_A, cropped_B
 
 
-def capcha(aid, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
+def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
            SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
-    base_dir = os.getcwd()
-    env_file = os.path.join(base_dir, '.env')
-    load_dotenv(dotenv_path=env_file)
-    proxy = os.getenv('PROXY')
-    user_data_dir = os.path.join(base_dir, 'chrome-win', 'Reporter')
-    driver = start_chrome(user_data_dir,True,proxy)
+
+
+
+
 
     while True:
 
@@ -52,11 +48,11 @@ def capcha(aid, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
 
             WebDriverWait(driver, 20, 1).until(
                 EC.presence_of_element_located(
-                    (By.XPATH, '/html/body/div/div[2]/div[2]/div[2]/div[1]/div/div/div[2]'))
+                    (By.XPATH, '/html/body/div/div[2]/div[1]/div[2]/div[1]/div/div/div[2]'))
             ).click()
 
             WebDriverWait(driver, 20, 1).until(
-                EC.presence_of_element_located((By.XPATH, '/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/label/div[2]/textarea'))
+                EC.presence_of_element_located((By.XPATH, '/html/body/div/div[2]/div[1]/div[2]/div[1]/div[2]/label/div[2]/textarea'))
             ).send_keys('视频封面标题以及内容违规')
 
             while True:
@@ -90,12 +86,7 @@ def capcha(aid, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                     time.sleep(0.5)
                 print(attempt)
                 url = re.search(r'url\("([^"]+?)\?[^"]*"\);', f).group(1)
-                print(url)
-                proxies = {
-                    "http": None,
-                    "https": None
-                }
-                content = requests.get(url,timeout=(5, 10),proxies=proxies).content
+                content = requests.get(url, timeout=(5, 10),proxies=None).content
 
                 # 将 bytes 转为 NumPy 数组
                 nparr = numpy.frombuffer(content, numpy.uint8)
