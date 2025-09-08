@@ -26,7 +26,7 @@ def iou(a, b):
     return inter / union if union > 0 else 0
 
 
-def nms(detections, iou_th=0.5):
+def nms(detections, iou_th=0.6):
     detections = sorted(detections, key=lambda d: d["conf"], reverse=True)
     keep = []
     used = [False] * len(detections)
@@ -53,7 +53,7 @@ def run_yolo(img,YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS):
     preds = preds[0]
 
     detections = []
-    conf_th = 0.3
+    conf_th = 0.5
     for x, y, w, h, conf, class0, class1 in preds:
         if conf < conf_th:
             continue
