@@ -18,6 +18,7 @@ def report():
     SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS = load_siamese(siamese_file)
     uid_file = os.path.join(base_dir, 'list', 'uid')
     black_file = os.path.join(base_dir, 'list', 'black')
+    user_data_dir = os.path.join(base_dir, 'chrome-win', 'Reporter')
     env_file = os.path.join(base_dir, '.env')
     uids = set()
     load_dotenv(dotenv_path=env_file)
@@ -52,6 +53,7 @@ def report():
     }
     tids = list(tids_with_weights.keys())
     weights = list(tids_with_weights.values())
+    driver = start_chrome(user_data_dir, True, proxy)
     try:
         with open(uid_file, 'r', encoding='utf-8') as file:  # 以读取模式打开文件
             for line in file:
@@ -136,7 +138,7 @@ def report():
                     break
                 elif "-352" in response.text or "-351" in response.text:
                     print(f'视频{reportcount:03}:{response.text}')
-                    COOKIE = capcha(aid, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
+                    COOKIE = capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                                     SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
                     os.environ["reporter"] = COOKIE
                     session.headers.update({
