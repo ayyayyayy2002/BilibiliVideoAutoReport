@@ -130,7 +130,7 @@ def report():
             try:
                 response = session.post('https://api.bilibili.com/x/web-interface/appeal/v2/submit', data=data,
                                         timeout=(3, 3))
-                if "62009" in response.text:
+                if "62009" in response.text or reportcount >=30:
 
                     print(f'视频{reportcount:03}:{response.text}')
                     break
