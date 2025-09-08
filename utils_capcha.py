@@ -34,6 +34,7 @@ def crop_detections(img, classA, classB):
 
 def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
            SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
+    base_dir = os.getcwd()
 
 
 
@@ -48,7 +49,7 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
 
             WebDriverWait(driver, 20, 1).until(
                 EC.presence_of_element_located(
-                    (By.XPATH, '/html/body/div/div[2]/div[1]/div[2]/div[1]/div/div/div[2]'))
+                    (By.XPATH, '/html/body/div/div[2]/div[2]/div[2]/div[1]/div/div/div[2]'))
             ).click()
 
             WebDriverWait(driver, 20, 1).until(
