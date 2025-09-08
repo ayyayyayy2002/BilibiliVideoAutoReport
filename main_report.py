@@ -54,7 +54,7 @@ def report():
     }
     tids = list(tids_with_weights.keys())
     weights = list(tids_with_weights.values())
-    driver = start_chrome(user_data_dir, False, proxy)
+    driver = start_chrome(user_data_dir, True, proxy)
     try:
         with open(uid_file, 'r', encoding='utf-8') as file:  # 以读取模式打开文件
             for line in file:
