@@ -71,7 +71,6 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                     print("验证码元素未出现")
                     cookies = driver.get_cookies()
                     COOKIE = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
-                    driver.quit()
                     return COOKIE
 
             while True:
@@ -161,5 +160,4 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
 
     cookies = driver.get_cookies()
     COOKIE = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
-    driver.quit()
     return COOKIE
