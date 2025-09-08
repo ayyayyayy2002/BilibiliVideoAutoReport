@@ -67,8 +67,9 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                         EC.presence_of_element_located((By.XPATH, '//*[@class="geetest_item_wrap"]'))
                     )
                     break  # 如果元素出现则退出循环
-                except Exception:
-                    print("验证码元素未出现")
+                except Exception as e:
+                    print(f"验证码元素未出现{e}")
+
                     cookies = driver.get_cookies()
                     COOKIE = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
                     return COOKIE
@@ -152,7 +153,7 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
 
                     break
                 except Exception as e:
-                    print('验证码未消失')
+                    print(f'验证码未消失{e}')
                     fname = os.path.basename(urlparse(unquote(url)).path)  # 去掉 query，取原始文件名
                     file_path = os.path.join(base_dir, 'captcha', 'false', fname)
                     with open(file_path, 'wb') as fp:
