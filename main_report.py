@@ -57,7 +57,7 @@ def report():
 
     os.system("taskkill /f /im chromium.exe /t >nul 2>&1")
     os.system("taskkill /f /im chromedriver.exe /t >nul 2>&1")
-    driver = start_chrome(user_data_dir, False, proxy)
+    driver = start_chrome(user_data_dir, True, proxy)
     try:
         with open(uid_file, 'r', encoding='utf-8') as file:  # 以读取模式打开文件
             for line in file:
@@ -82,6 +82,16 @@ def report():
     session.proxies.update(proxies)
 
     for uid in uids:
+        try:
+            with open(uid_file, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+            with open(uid_file, 'w', encoding='utf-8') as f:
+                for line in lines:
+                    if line.strip() != uid:
+                        f.write(line)
+            print(f"删除UID: {uid}")
+        except Exception as e:
+            return f"删除UID时发生错误: {e}"
         date = datetime.now().strftime('[%m-%d]')
         aid_log_file = os.path.join(base_dir, 'record', 'report', f'{date}{uid}.txt')
         response = session.get(f'https://api.bilibili.com/x/web-interface/card?mid={uid}', timeout=(5, 10))
@@ -164,15 +174,5 @@ def report():
                 file.write(f'{enc(int(aid))},{tid}，{title}\n')
 
 
-        try:
-            with open(uid_file, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
-            with open(uid_file, 'w', encoding='utf-8') as f:
-                for line in lines:
-                    if line.strip() != uid:
-                        f.write(line)
-            print(f"删除UID: {uid}")
-        except Exception as e:
-            return f"删除UID时发生错误: {e}"
 
     return "0"
