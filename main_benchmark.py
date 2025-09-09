@@ -9,6 +9,7 @@ from ml_load import load_yolo, load_siamese
 from ml_siamese import run_siamese
 from ml_yolo import run_yolo
 from selenium.webdriver import ActionChains
+from utils_accuracy import calc_accuracy
 from utils_capcha import crop_detections
 from utils_chrome import start_chrome
 from selenium.webdriver.common.by import By
@@ -146,6 +147,7 @@ def benchmark():
                     file_path = os.path.join(base_dir,'captcha','false' ,fname)
                     with open(file_path, 'wb') as fp:
                         fp.write(content)
+                calc_accuracy()
                 if not (len(classA) == len(classB) == len(selected)):
                     exit(0)
 
