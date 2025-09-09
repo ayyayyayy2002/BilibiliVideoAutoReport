@@ -140,6 +140,7 @@ def benchmark():
                     file_path = os.path.join(base_dir,'captcha','true' ,fname)
                     with open(file_path, 'wb') as fp:
                         fp.write(content)
+                    calc_accuracy()
                     break
                 except Exception as e:
                     print('验证码未消失')
@@ -163,4 +164,4 @@ def benchmark():
 
         except Exception as e:
             print(e)
-        calc_accuracy()
+
