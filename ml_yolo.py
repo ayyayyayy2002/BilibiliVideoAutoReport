@@ -53,7 +53,7 @@ def run_yolo(img,YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS):
     preds = preds[0]
 
     detections = []
-    conf_th = 0.7
+    conf_th = 0.4
     for x, y, w, h, conf, class0, class1 in preds:
         if conf < conf_th:
             continue
