@@ -114,7 +114,7 @@ def report():
             titles.append(archive['title'])
             pics.append(archive['pic'])
         count = len(aids)
-        if count == 0 or name=="账号已注销":
+        if name=="账号已注销":
             try:
                 with open(black_file, 'r', encoding='utf-8') as f:
                     lines = f.readlines()
