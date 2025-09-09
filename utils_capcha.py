@@ -11,16 +11,7 @@ import time
 import cv2
 import re
 import os
-
-
-
-
-
-
-
-
-
-
+from utils_accuracy import calc_accuracy
 
 
 def crop_detections(img, classA, classB):
@@ -172,6 +163,7 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                     file_path = os.path.join(base_dir, 'captcha', 'false', fname)
                     with open(file_path, 'wb') as fp:
                         fp.write(content)
+                calc_accuracy()
 
             break
         except Exception as e:
