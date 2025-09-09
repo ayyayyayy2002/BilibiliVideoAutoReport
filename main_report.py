@@ -54,6 +54,9 @@ def report():
     }
     tids = list(tids_with_weights.keys())
     weights = list(tids_with_weights.values())
+
+    os.system("taskkill /f /im chromium.exe /t >nul 2>&1")
+    os.system("taskkill /f /im chromedriver.exe /t >nul 2>&1")
     driver = start_chrome(user_data_dir, False, proxy)
     try:
         with open(uid_file, 'r', encoding='utf-8') as file:  # 以读取模式打开文件
@@ -119,6 +122,7 @@ def report():
         print(f'\nhttps://space.bilibili.com/{uid}\n')
         reportcount = 0
 
+
         for aid, title, pic in zip(aids, titles, pics):
             tid = random.choices(tids, weights=weights, k=1)[0]
             reportcount += 1
@@ -130,11 +134,15 @@ def report():
                 'desc': reason,
                 'tid': f'{tid}'
             }
+            while True:
+                try:
+                    response = session.post('https://api.bilibili.com/x/web-interface/appeal/v2/submit', data=data,timeout=(3, 3))
+                    break
+                except Exception as e:
+                    print(e)
+                    switch_proxy(group)
 
-            response = session.post('https://api.bilibili.com/x/web-interface/appeal/v2/submit', data=data,
-                                    timeout=(3, 3))
             if "62009" in response.text or reportcount >=30:
-
                 print(f'视频{reportcount:03}:{response.text}')
                 break
             elif "-352" in response.text or "-351" in response.text:
@@ -146,9 +154,6 @@ def report():
                     'user-agent': UA,
                     'cookie': COOKIE
                 })
-
-
-
             elif "412" in response.text:
                 print('报错412，切换代理')
                 switch_proxy(group)
