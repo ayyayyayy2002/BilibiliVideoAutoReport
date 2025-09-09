@@ -163,12 +163,12 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                     file_path = os.path.join(base_dir, 'captcha', 'false', fname)
                     with open(file_path, 'wb') as fp:
                         fp.write(content)
-                calc_accuracy()
+
 
             break
         except Exception as e:
             raise RuntimeError(f"人机验证出错: {e}")
-
+    calc_accuracy()
     cookies = driver.get_cookies()
     COOKIE = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
     return COOKIE
