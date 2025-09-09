@@ -172,7 +172,7 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
 
             break
         except Exception as e:
-            print(f'人机验证出错{e}')
+            raise f'人机验证出错{e}'
 
     cookies = driver.get_cookies()
     COOKIE = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
