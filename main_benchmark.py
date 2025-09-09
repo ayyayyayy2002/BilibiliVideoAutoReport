@@ -149,7 +149,7 @@ def benchmark():
                         fp.write(content)
                 calc_accuracy()
                 if not (len(classA) == len(classB) == len(selected)):
-                    exit(0)
+                    exit("识别结果有问题，请调整参数")
 
 
 
