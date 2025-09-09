@@ -64,6 +64,7 @@ def benchmark():
                 print(attempt)
                 url = re.search(r'url\("([^"]+?)\?[^"]*"\);', f).group(1)
                 content = requests.get(url, timeout=(5, 10),proxies=None).content
+                print(url)
 
                 # 将 bytes 转为 NumPy 数组
                 nparr = numpy.frombuffer(content, numpy.uint8)
@@ -74,7 +75,7 @@ def benchmark():
 
                 # 传入 run_yolo
                 classA, classB = run_yolo(img, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS)
-                
+
                 print("\n类别A:")
                 if classA:
                     for i, d in enumerate(classA, 1):
@@ -92,6 +93,8 @@ def benchmark():
                     print("  无检测到目标")
                 cropped_A, cropped_B = crop_detections(img, classA, classB)
                 results_2d = run_siamese(cropped_A, cropped_B, SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
+                for i, row in enumerate(results_2d):
+                    print(f"A{i + 1} vs all B:", row)
                 selected = []
                 for row in results_2d:
                     max_idx = row.index(max(row))  # 找到每行最大值的索引
@@ -125,6 +128,7 @@ def benchmark():
                     expected_conditions.element_to_be_clickable((By.CLASS_NAME, 'geetest_commit_tip'))
                 )
                 element.click()  # 提交验证码
+
                 try:
 
                     WebDriverWait(driver, 3).until(
@@ -142,6 +146,9 @@ def benchmark():
                     file_path = os.path.join(base_dir,'captcha','false' ,fname)
                     with open(file_path, 'wb') as fp:
                         fp.write(content)
+                if not (len(classA) == len(classB) == len(selected)):
+                    exit(0)
+
 
 
 
