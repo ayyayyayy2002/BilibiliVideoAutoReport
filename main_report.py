@@ -130,36 +130,34 @@ def report():
                 'desc': reason,
                 'tid': f'{tid}'
             }
-            try:
-                response = session.post('https://api.bilibili.com/x/web-interface/appeal/v2/submit', data=data,
-                                        timeout=(3, 3))
-                if "62009" in response.text or reportcount >=30:
 
-                    print(f'视频{reportcount:03}:{response.text}')
-                    break
-                elif "-352" in response.text or "-351" in response.text:
-                    print(f'视频{reportcount:03}:{response.text}')
-                    COOKIE = capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
-                                    SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
-                    os.environ["reporter"] = COOKIE
-                    session.headers.update({
-                        'user-agent': UA,
-                        'cookie': COOKIE
-                    })
+            response = session.post('https://api.bilibili.com/x/web-interface/appeal/v2/submit', data=data,
+                                    timeout=(3, 3))
+            if "62009" in response.text or reportcount >=30:
 
-                    set_key(env_file, "reporter", COOKIE)
+                print(f'视频{reportcount:03}:{response.text}')
+                break
+            elif "-352" in response.text or "-351" in response.text:
+                print(f'视频{reportcount:03}:{response.text}')
+                COOKIE = capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
+                                SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
+                set_key(env_file, "reporter", COOKIE)
+                session.headers.update({
+                    'user-agent': UA,
+                    'cookie': COOKIE
+                })
 
-                elif "412" in response.text:
-                    print('报错412，切换代理')
-                    switch_proxy(group)
-                else:
-                    print(f'视频{reportcount:03}:{response.text}')
 
-                with open(aid_log_file, 'a', encoding='utf-8') as file:
-                    file.write(f'{enc(int(aid))},{tid}，{title}\n')
-            except Exception as e:
-                print(e)
+
+            elif "412" in response.text:
+                print('报错412，切换代理')
                 switch_proxy(group)
+            else:
+                print(f'视频{reportcount:03}:{response.text}')
+
+            with open(aid_log_file, 'a', encoding='utf-8') as file:
+                file.write(f'{enc(int(aid))},{tid}，{title}\n')
+
 
         try:
             with open(uid_file, 'r', encoding='utf-8') as f:
