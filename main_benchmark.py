@@ -74,7 +74,7 @@ def benchmark():
 
                 # 传入 run_yolo
                 classA, classB = run_yolo(img, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS)
-                print(len(classA), len(classB))
+                
                 print("\n类别A:")
                 if classA:
                     for i, d in enumerate(classA, 1):
