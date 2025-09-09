@@ -103,6 +103,7 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                     "https": None
                 }
                 content = requests.get(url, timeout=(5, 10),proxies=proxies).content
+                print(url)
 
                 # 将 bytes 转为 NumPy 数组
                 nparr = numpy.frombuffer(content, numpy.uint8)
