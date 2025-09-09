@@ -1,18 +1,26 @@
-import numpy
-import cv2
-from dotenv import load_dotenv
-from ml_siamese import run_siamese
-from ml_yolo import run_yolo
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
+from urllib.parse import urlparse, unquote
+from ml_siamese import run_siamese
+from ml_yolo import run_yolo
 import requests
+import numpy
 import time
+import cv2
 import re
 import os
-from urllib.parse import urlparse, unquote
-from utils_chrome import start_chrome
+
+
+
+
+
+
+
+
+
+
 
 
 def crop_detections(img, classA, classB):
@@ -37,14 +45,7 @@ def crop_detections(img, classA, classB):
 def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
            SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
     base_dir = os.getcwd()
-    try:
-        var = driver.title
-    except:
-        user_data_dir = os.path.join(base_dir, 'chrome-win', 'Reporter')
-        env_file = os.path.join(base_dir, '.env')
-        load_dotenv(dotenv_path=env_file)
-        proxy = os.getenv('PROXY')
-        driver = start_chrome(user_data_dir, True, proxy)
+
 
 
 
