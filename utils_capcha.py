@@ -114,6 +114,7 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
 
                 # 传入 run_yolo
                 classA, classB = run_yolo(img,YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS)
+                print(len(classA), len(classB))
 
                 cropped_A, cropped_B = crop_detections(img, classA, classB)
                 results_2d = run_siamese(cropped_A, cropped_B,SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
