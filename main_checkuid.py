@@ -1,6 +1,5 @@
 import os
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
 
@@ -28,6 +27,7 @@ def checkuid():
         chrome_options = Options()
         chrome_options.add_argument(f"--user-data-dir=C:/Users/{username}/AppData/Local/Google/Chrome/User Data")
         chrome_options.add_argument("--profile-directory=Default")
+        print("1111111")
         driver = webdriver.Chrome( options=chrome_options)
         driver.get(f'https://space.bilibili.com/{uid}')
 
