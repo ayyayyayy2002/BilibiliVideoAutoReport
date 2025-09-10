@@ -24,6 +24,7 @@ def checkuid():
     driver = start_chrome(user_data_dir, False, None)
     driver.set_window_size(1200, 800)
     for uid in uids:
+        print(f"打开UID：{uid}")
         driver.get(f'https://space.bilibili.com/{uid}')
         print("请按回车继续...")
         input()  # 程序会在这里暂停，直到用户按回车
