@@ -1,5 +1,6 @@
 from main_benchmark import benchmark
 from main_check import check
+from main_checkuid import checkuid
 from main_getuid import getuid
 from main_label import label
 from main_report import report
@@ -18,6 +19,7 @@ def main():
     print("6. benchmark()")
     print("7. label()")
     print("8. cut()")
+    print("9. checkuid()")
 
     choice = input("请输入：")
 
@@ -38,6 +40,8 @@ def main():
         label()
     elif choice == "8":
         cut()
+    elif choice == "9":
+        checkuid()
     else:
         print("输入无效")
 
