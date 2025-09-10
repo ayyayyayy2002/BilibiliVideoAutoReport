@@ -169,7 +169,7 @@ def report():
                 print('报错412，切换代理')
                 switch_proxy(group)
             else:
-                print(f'视频{reportcount:03}:{response.text}')
+                print(f'视频{reportcount:03}:{response.text}，{title}')
 
             with open(aid_log_file, 'a', encoding='utf-8') as file:
                 file.write(f'{enc(int(aid))},{tid}，{title}\n')
