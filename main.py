@@ -10,40 +10,41 @@ from mian_cut import cut
 
 
 def main():
-    print("请输入数字选择要运行的函数：")
-    print("1. LOOP()")
-    print("2. setup()")
-    print("3. getuid()")
-    print("4. report()")
-    print("5. check()")
-    print("6. benchmark()")
-    print("7. label()")
-    print("8. cut()")
-    print("9. checkuid()")
+    while True:
+        print("请输入数字选择要运行的函数：")
+        print("1. LOOP()")
+        print("2. setup()")
+        print("3. getuid()")
+        print("4. report()")
+        print("5. check()")
+        print("6. benchmark()")
+        print("7. label()")
+        print("8. cut()")
+        print("9. checkuid()")
 
-    choice = input("请输入：")
+        choice = input("请输入：")
 
 
-    if choice == "1":
-        LOOP()
-    elif choice == "2":
-        setup()
-    elif choice == "3":
-        getuid()
-    elif choice == "4":
-        report()
-    elif choice == "5":
-        check()
-    elif choice == "6":
-        benchmark()
-    elif choice == "7":
-        label()
-    elif choice == "8":
-        cut()
-    elif choice == "9":
-        checkuid()
-    else:
-        print("输入无效")
+        if choice == "1":
+            LOOP()
+        elif choice == "2":
+            setup()
+        elif choice == "3":
+            getuid()
+        elif choice == "4":
+            report()
+        elif choice == "5":
+            check()
+        elif choice == "6":
+            benchmark()
+        elif choice == "7":
+            label()
+        elif choice == "8":
+            cut()
+        elif choice == "9":
+            checkuid()
+        else:
+            print("输入无效")
 
 
 if __name__ == "__main__":
