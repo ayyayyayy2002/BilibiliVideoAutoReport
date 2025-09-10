@@ -2,6 +2,8 @@ import cv2
 import os
 from ml_load import load_yolo
 from ml_yolo import run_yolo
+from tqdm import tqdm
+
 
 def save_yolo_labels(img_path, classA, classB):
     import cv2, os
@@ -43,9 +45,10 @@ def label():
     YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS = load_yolo(yolo_file)
 
     # 遍历 true_dir 里的所有图片
-    for file in os.listdir(true_dir):
+    files = os.listdir(true_dir)
+    for file in tqdm(files, desc="处理图片", unit="张"):
         img_path = os.path.join(true_dir, file)
-        if not file.lower().endswith((".jpg", ".jpeg", ".png")):
+        if not file.lower().endswith(".jpg"):
             continue  # 跳过非图片文件
         img = cv2.imread(img_path)  # 这里转成对象
         if img is None:
