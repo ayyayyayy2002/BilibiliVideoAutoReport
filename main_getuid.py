@@ -67,7 +67,8 @@ def getuid():
         for line in lines:
             uid = line.strip()
             lists.discard(uid)
-    sorted_lists = sorted(lists)
+    lists.discard("")
+    sorted_lists = sorted(lists,key=int)
     with open(black_file, 'w', encoding='utf-8') as file:
         for sorted_list in sorted_lists:
             file.write(f'{sorted_list}\n')
@@ -99,10 +100,10 @@ def getuid():
                     break
             print(f"搜索结果：{mids}")
 
-
-
+    lists.discard("")
+    sorted_lists = sorted(lists, key=int)
     with open(uid_file, 'w', encoding='utf-8') as file:
-        for list in lists:
-            file.write(f'{list}\n')
+        for sorted_list in sorted_lists:
+            file.write(f'{sorted_list}\n')
 
     return "0"
