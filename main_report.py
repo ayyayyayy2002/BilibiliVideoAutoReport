@@ -141,7 +141,7 @@ def report():
                 'attach': pic,
                 'block_author': 'false',
                 'csrf': CSRF,
-                'desc': reason,
+                'desc': reason.replace("title",title),
                 'tid': f'{tid}'
             }
             while True:
