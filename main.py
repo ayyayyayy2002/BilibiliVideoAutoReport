@@ -5,6 +5,7 @@ from main_label import label
 from main_report import report
 from main_setup import setup
 from mian_LOOP import LOOP
+from mian_cut import cut
 
 
 def main():
@@ -16,6 +17,7 @@ def main():
     print("5. check()")
     print("6. benchmark()")
     print("7. label()")
+    print("8. cut()")
 
     choice = input("请输入：")
 
@@ -34,6 +36,8 @@ def main():
         benchmark()
     elif choice == "7":
         label()
+    elif choice == "8":
+        cut()
     else:
         print("输入无效")
 
