@@ -67,10 +67,10 @@ def getuid():
         for line in lines:
             uid = line.strip()
             lists.discard(uid)
-
+    sorted_lists = sorted(lists)
     with open(black_file, 'w', encoding='utf-8') as file:
-        for list in lists:
-            file.write(f'{list}\n')
+        for sorted_list in sorted_lists:
+            file.write(f'{sorted_lists}\n')
 
     with open(keywords_file, 'r', encoding='utf-8') as file:
         lines = file.readlines()
