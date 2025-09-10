@@ -44,7 +44,7 @@ def main():
         elif choice == "9":
             checkuid()
         else:
-            print("输入无效")
+            LOOP()
 
 
 if __name__ == "__main__":
