@@ -1,4 +1,5 @@
 import os
+from selenium import webdriver
 from utils_chrome import start_chrome
 from variables import uid_file
 
@@ -21,11 +22,11 @@ def checkuid():
     if not uids:
         print("uid.txt 文件中没有可处理的UID，程序退出")
         return "0"
-    driver = start_chrome( False, None)
+    driver = webdriver.Chrome()
     driver.set_window_size(1200, 800)
     for uid in uids:
         print(f"打开UID：{uid}")
-        driver.get(f'https://space.bilibili.com/{uid}')
+        driver.get(f'https://space.bilibili.com/{uid}/videos')
         print("请按回车继续...")
         input()  # 程序会在这里暂停，直到用户按回车
 
