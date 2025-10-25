@@ -1,5 +1,3 @@
-import os
-from dotenv import load_dotenv
 from main_getuid import getuid
 from main_report import report
 from utils_proxy import switch_proxy
@@ -22,11 +20,7 @@ def LOOP():
                     break
             except Exception as e:
                 print(e)
-                base_dir = os.getcwd()
-                env_file = os.path.join(base_dir, '.env')
-                load_dotenv(dotenv_path=env_file)
-                group = os.getenv('group')
-                switch_proxy(group)
+                switch_proxy()
         while True:
             try:
                 result = report()
@@ -35,8 +29,4 @@ def LOOP():
                     break
             except Exception as e:
                 print(e)
-                base_dir = os.getcwd()
-                env_file = os.path.join(base_dir, '.env')
-                load_dotenv(dotenv_path=env_file)
-                group = os.getenv('group')
-                switch_proxy(group)
+                switch_proxy()
