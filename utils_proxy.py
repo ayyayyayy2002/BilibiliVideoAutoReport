@@ -1,13 +1,13 @@
 import requests
 
-from variables import CLASH_API_URL
+from variables import CLASH_API_URL, group
 
 
-def switch_proxy(GROUP):
+def switch_proxy():
 
 
     # 获取 GLOBAL 策略组信息
-    group_url = f"{CLASH_API_URL}/proxies/{GROUP}"
+    group_url = f"{CLASH_API_URL}/proxies/{group}"
     print(group_url)
     response = requests.get(group_url)
     data = response.json()
@@ -36,7 +36,7 @@ def switch_proxy(GROUP):
     print(f"切换到下一个代理: {next_proxy}")
 
     # 切换代理
-    put_url = f"{CLASH_API_URL}/proxies/{GROUP}"
+    put_url = f"{CLASH_API_URL}/proxies/{group}"
     res = requests.put(put_url, json={"name": next_proxy})
     if res.status_code == 204:
         print("代理切换成功！")
@@ -47,6 +47,4 @@ def switch_proxy(GROUP):
     if del_res.status_code == 204:
         print("连接清除成功！")
 
-# 直接调用
-if __name__ == "__main__":
-    switch_proxy("哔哩哔哩")
+
