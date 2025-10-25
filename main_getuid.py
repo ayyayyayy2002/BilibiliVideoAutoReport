@@ -81,7 +81,6 @@ def getuid():
     if keywords:
         for keyword in keywords:
             mids = set()
-            COOKIE = os.getenv('reporter')
             headers = {'cookie': COOKIE, 'user-agent': UA}
             print(f"正在搜索关键词：{keyword}")
             response = requests.get(
