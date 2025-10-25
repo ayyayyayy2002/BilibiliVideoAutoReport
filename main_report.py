@@ -137,7 +137,7 @@ def report():
 
         items = list(zip(aids, titles, pics))
         random.shuffle(items)
-        for aid, title, pic in zip(aids, titles, pics):
+        for aid, title, pic in items:
             tid = random.choices(tids, weights=weights, k=1)[0]
             reportcount += 1
             data = {
