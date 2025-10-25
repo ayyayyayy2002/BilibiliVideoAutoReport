@@ -51,7 +51,7 @@ def report():
     os.system("taskkill /f /im chromium.exe /t >nul 2>&1")
     os.system("taskkill /f /im chromedriver.exe /t >nul 2>&1")
 
-    driver = start_chrome( True, "")
+    driver = start_chrome( True, "http://127.0.0.1:7890")
     driver.get("https://space.bilibili.com")
     for c in cookies:
         c.pop("sameSite", None)
