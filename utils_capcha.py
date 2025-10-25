@@ -69,8 +69,8 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                     print(f"验证码元素未出现{e}")
 
                     cookies = driver.get_cookies()
-                    COOKIE = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
-                    return COOKIE
+                    pickle.dump(cookies, open(reporter_cookie_file, "wb"))
+                    return
 
             while True:
                 img = WebDriverWait(driver, 5).until(
