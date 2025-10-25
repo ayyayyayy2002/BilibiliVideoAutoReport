@@ -154,7 +154,7 @@ def report():
                     break
                 except Exception as e:
                     print(e)
-                    switch_proxy(group)
+                    switch_proxy()
 
             if "62009" in response.text or reportcount >=10:
                 print(f'视频{reportcount:03}:{response.text}，{title}')
@@ -171,7 +171,7 @@ def report():
                 })
             elif "412" in response.text:
                 print('报错412，切换代理')
-                switch_proxy(group)
+                switch_proxy()
             else:
                 print(f'视频{reportcount:03}:{response.text}，{title}')
 
