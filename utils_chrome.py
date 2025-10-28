@@ -15,7 +15,10 @@ def start_chrome(headless: bool = False, proxy_url: str = None):
     options.binary_location = chrome_binary_path
     options.add_argument(f'--user-data-dir={user_data_dir}')
     options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_argument("--disable-gpu")
+    options.add_argument('--no-sandbox')  # fix:DevToolsActivePort file doesn't exist
+    options.add_argument('--disable-gpu')  # fix:DevToolsActivePort file doesn't exist
+    options.add_argument('--disable-dev-shm-usage')  # fix:DevToolsActivePort file doesn't exist
+    options.add_argument('--remote-debugging-port=9222')  # fix:DevToolsActivePort file doesn't
     options.add_argument("--disable-sync")
     options.add_argument("disable-cache")
     options.add_argument('log-level=3')
