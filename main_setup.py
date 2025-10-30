@@ -9,6 +9,18 @@ def setup():
     print("登录Reporter")
     driver = start_chrome( headless=False,proxy_url="")
     driver.get("https://space.bilibili.com")
+    try:
+        cookies = pickle.load(open(reporter_cookie_file, "rb"))
+    except:
+        cookies=[]
+    for c in cookies:
+        c.pop("sameSite", None)
+        c.pop("expiry", None)
+        try:
+            driver.add_cookie(c)
+        except:
+            pass
+
     while True:
         match = re.search(r'/(\d+)$', driver.current_url)
         if match:
@@ -24,6 +36,17 @@ def setup():
     print("登录Collector")
     driver = start_chrome( headless=False,proxy_url="")
     driver.get("https://space.bilibili.com")
+    try:
+        cookies = pickle.load(open(collector_cookie_file, "rb"))
+    except:
+        cookies=[]
+    for c in cookies:
+        c.pop("sameSite", None)
+        c.pop("expiry", None)
+        try:
+            driver.add_cookie(c)
+        except:
+            pass
     while True:
         match = re.search(r'/(\d+)$', driver.current_url)
         if match:
