@@ -6,18 +6,9 @@ from variables import reporter_cookie_file, base_dir, collector_cookie_file
 
 
 def setup():
-
-
-
-
-
-    # Reporter
     print("登录Reporter")
     driver = start_chrome( headless=False,proxy_url="")
     driver.get("https://space.bilibili.com")
-
-
-
     while True:
         match = re.search(r'/(\d+)$', driver.current_url)
         if match:
@@ -33,9 +24,6 @@ def setup():
     print("登录Collector")
     driver = start_chrome( headless=False,proxy_url="")
     driver.get("https://space.bilibili.com")
-
-
-
     while True:
         match = re.search(r'/(\d+)$', driver.current_url)
         if match:
