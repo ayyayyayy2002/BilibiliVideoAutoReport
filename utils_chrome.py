@@ -3,11 +3,10 @@ import shutil
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
-from variables import chrome_binary_path, chrome_driver_path
+from variables import chrome_binary_path, chrome_driver_path, user_data_dir
 
 
 def start_chrome(headless: bool = False, proxy_url: str = None):
-    user_data_dir =  "User Data"
     if os.path.exists(user_data_dir):
         shutil.rmtree(user_data_dir)
 
@@ -41,6 +40,5 @@ def start_chrome(headless: bool = False, proxy_url: str = None):
 
 # 示例调用
 if __name__ == "__main__":
-    # 使用用户目录 "chrome-win/Reporter"，不开启无头，不用代理
     driver = start_chrome( headless=False, proxy_url=None)
     driver.get("https://www.baidu.com")
