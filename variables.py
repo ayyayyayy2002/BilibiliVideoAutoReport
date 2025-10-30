@@ -8,6 +8,7 @@ collector_cookie_file = os.path.join(base_dir,'model', 'collector.pkl')
 UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 reason='标题title和封面违规，辱骂国家领导人，宣扬台独'
 group='🎞️哔哩哔哩'
+user_data_dir = os.path.join(base_dir,  "User Data")
 uid_file = os.path.join(base_dir, 'list', 'uid')
 white_file = os.path.join(base_dir, 'list', 'white')
 black_file = os.path.join(base_dir, 'list', 'black')
