@@ -11,15 +11,17 @@ def setup():
     driver.get("https://space.bilibili.com")
     try:
         cookies = pickle.load(open(reporter_cookie_file, "rb"))
+        for c in cookies:
+            c.pop("sameSite", None)
+            c.pop("expiry", None)
+            try:
+                driver.add_cookie(c)
+            except:
+                pass
+        driver.refresh()
     except:
-        cookies=[]
-    for c in cookies:
-        c.pop("sameSite", None)
-        c.pop("expiry", None)
-        try:
-            driver.add_cookie(c)
-        except:
-            pass
+        print("Reporter加载cookie失败")
+
 
     while True:
         match = re.search(r'/(\d+)$', driver.current_url)
@@ -38,15 +40,17 @@ def setup():
     driver.get("https://space.bilibili.com")
     try:
         cookies = pickle.load(open(collector_cookie_file, "rb"))
+        for c in cookies:
+            c.pop("sameSite", None)
+            c.pop("expiry", None)
+            try:
+                driver.add_cookie(c)
+            except:
+                pass
+        driver.refresh()
     except:
-        cookies=[]
-    for c in cookies:
-        c.pop("sameSite", None)
-        c.pop("expiry", None)
-        try:
-            driver.add_cookie(c)
-        except:
-            pass
+        print("Collector加载cookie失败")
+
     while True:
         match = re.search(r'/(\d+)$', driver.current_url)
         if match:
