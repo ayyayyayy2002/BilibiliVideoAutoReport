@@ -62,7 +62,7 @@ def benchmark():
                     time.sleep(0.5)
                 print(attempt)
                 url = re.search(r'url\("([^"]+?)\?[^"]*"\);', f).group(1)
-                content = requests.get(url, timeout=(5, 10),proxies=None).content
+                content = requests.get(url, timeout=(3, 3),proxies=None).content
                 print(url)
 
                 # 将 bytes 转为 NumPy 数组
