@@ -97,7 +97,7 @@ def report():
             return f"删除UID时发生错误: {e}"
         date = datetime.now().strftime('[%m-%d]')
         aid_log_file = os.path.join(base_dir, 'record', 'report', f'{date}{uid}.txt')
-        response = session.get(f'https://api.bilibili.com/x/web-interface/card?mid={uid}', timeout=(5, 10),proxies=proxies)
+        response = session.get(f'https://api.bilibili.com/x/web-interface/card?mid={uid}', timeout=(2, 2),proxies=proxies)
         data = response.json()
         name = data['data']['card']['name']
 
@@ -156,11 +156,11 @@ def report():
                     print(e)
                     switch_proxy()
 
-            if "62009" in response.text or reportcount >=10:
+            if "62009" in response.text or reportcount >=150:
                 print(f'视频{reportcount:03}:{response.text}，{title}')
                 break
             elif "-352" in response.text or "-351" in response.text:
-                print(f'视频{reportcount:03}:{response.text}，{title}')
+                print(f'视频{reportcount:03}:{response.text}\n{aid}{title}')
                 capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                                 SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
                 cookies = pickle.load(open(reporter_cookie_file, "rb"))
@@ -173,7 +173,7 @@ def report():
                 print('报错412，切换代理')
                 switch_proxy()
             else:
-                print(f'视频{reportcount:03}:{response.text}，{title}')
+                print(f'视频{reportcount:03}:{response.text}\nhttps://www.bilibili.com/video/av{aid}\n{title}\n')
 
             with open(aid_log_file, 'a', encoding='utf-8') as file:
                 file.write(f'{enc(int(aid))},{tid}，{title}\n')
