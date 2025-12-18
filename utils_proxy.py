@@ -39,12 +39,12 @@ def switch_proxy():
     put_url = f"{CLASH_API_URL}/proxies/{group}"
     res = requests.put(put_url, json={"name": next_proxy})
     if res.status_code == 204:
-        print("代理切换成功！")
+        print("代理切换成功！\n")
 
     # 关闭所有连接
     delete_url = f"{CLASH_API_URL}/connections"
     del_res = requests.delete(delete_url)
     if del_res.status_code == 204:
-        print("连接清除成功！")
+        print("连接清除成功！\n")
 
 
