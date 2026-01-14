@@ -67,9 +67,6 @@ def capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                     break  # 如果元素出现则退出循环
                 except Exception as e:
                     print(f"验证码元素未出现{e}")
-
-                    cookies = driver.get_cookies()
-                    pickle.dump(cookies, open(reporter_cookie_file, "wb"))
                     return
 
             while True:
