@@ -1,9 +1,6 @@
 /.idea/
-*.txt
 *.pyc
 /chrome-win
-/python-3.10.11
-/python-3.10.11.amd64
 *.jpg
 *.pkl
 /User Data
