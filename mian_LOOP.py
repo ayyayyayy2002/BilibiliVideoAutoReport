@@ -5,6 +5,7 @@ from utils_proxy import switch_proxy
 
 def LOOP():
 
+
     skip=True
     while True:
         while True:
@@ -14,19 +15,11 @@ def LOOP():
             try:
 
                 result = getuid()
-                print(result)
                 if result =="0":
-
                     break
             except Exception as e:
                 print(e)
-                switch_proxy()
         while True:
-            try:
-                result = report()
-                print(result)
-                if result == "0" :
-                    break
-            except Exception as e:
-                print(e)
-                switch_proxy()
+            result = report()
+            if result == "0" :
+                break
