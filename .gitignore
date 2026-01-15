@@ -2,8 +2,5 @@
 *.pyc
 *.jpg
 *.pkl
-/list/chrome-win
-/record
-/list/User Data
 /playwright
 *.json
