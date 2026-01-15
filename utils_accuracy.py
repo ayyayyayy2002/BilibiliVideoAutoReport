@@ -1,10 +1,9 @@
 import os
 
-def calc_accuracy():
-    base_dir = os.getcwd()
-    true_dir = os.path.join(base_dir, "captcha", "true")
-    false_dir = os.path.join(base_dir, "captcha", "false")
+from variables import true_dir, false_dir
 
+
+def calc_accuracy():
     true_count = len([f for f in os.listdir(true_dir) if f.lower().endswith(".jpg")])
     false_count = len([f for f in os.listdir(false_dir) if f.lower().endswith(".jpg")])
 
