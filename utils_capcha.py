@@ -8,6 +8,7 @@ import cv2
 import re
 import os
 from utils_accuracy import calc_accuracy
+from utils_proxy import switch_proxy
 from variables import reporter_cookie_file, false_dir, true_dir
 
 
@@ -32,7 +33,6 @@ def crop_detections(img, classA, classB):
 
 def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
            SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
-
     while True:
         try:
             url = f"https://www.bilibili.com/appeal/?avid={aid}"
@@ -48,11 +48,11 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
             while True:
                 page.locator('xpath=/html/body/div/div[3]/div[2]').click()
                 try:
-                    page.wait_for_selector('.geetest_item_wrap', timeout=5000)
+                    page.wait_for_selector('.geetest_item_wrap', timeout=3000)
                     break
                 except:
                     print("验证码元素未出现")
-                    return
+                    switch_proxy()
 
             while True:
                 img_elem = page.wait_for_selector('.geetest_item_wrap', timeout=5000)
@@ -92,29 +92,29 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                     x_offset = (x_model / orig_size) * elem_size - elem_size / 2
                     y_offset = (y_model / orig_size) * elem_size - elem_size / 2
                     print(f"点击偏移量: ({x_offset:.1f}, {y_offset:.1f})")
-                    page.mouse.click(img_box['x'] + elem_size/2 + x_offset,
-                                     img_box['y'] + elem_size/2 + y_offset)
+                    page.mouse.click(img_box['x'] + elem_size / 2 + x_offset,
+                                     img_box['y'] + elem_size / 2 + y_offset)
                     time.sleep(0.5)
-
-                page.locator('.geetest_commit_tip').click(timeout=2000)  # 最多等待 5 秒
-
                 try:
+                    page.locator('.geetest_commit_tip').click(timeout=1000)
                     page.wait_for_selector('.geetest_item_wrap', state='hidden', timeout=3000)
-                    print("验证码已消失！")
+                    print("验证码正确")
                     fname = os.path.basename(urlparse(unquote(url)).path)
                     true_path = os.path.join(true_dir, fname)
                     with open(true_path, 'wb') as fp:
                         fp.write(content)
                     time.sleep(2)
-                    #calc_accuracy()
+                    calc_accuracy()
                     break
-                except:
-                    print('验证码未消失')
+                except Exception as e:
+                    print('验证码错误')
+                    print(e)
                     fname = os.path.basename(urlparse(unquote(url)).path)
                     false_path = os.path.join(false_dir, fname)
                     with open(false_path, 'wb') as fp:
                         fp.write(content)
-
+                    page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/div/a[2]').click()
+                    print("刷新验证码")
             break
         except Exception as e:
             raise RuntimeError(f"人机验证出错: {e}")
