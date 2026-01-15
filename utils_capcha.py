@@ -96,18 +96,17 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                                      img_box['y'] + elem_size/2 + y_offset)
                     time.sleep(0.5)
 
-                # 提交验证码
-                page.locator('.geetest_commit_tip').click()
+                page.locator('.geetest_commit_tip').click(timeout=2000)  # 最多等待 5 秒
 
                 try:
-                    page.wait_for_selector('.geetest_item_wrap', state='detached', timeout=3000)
+                    page.wait_for_selector('.geetest_item_wrap', state='hidden', timeout=3000)
                     print("验证码已消失！")
                     fname = os.path.basename(urlparse(unquote(url)).path)
                     true_path = os.path.join(true_dir, fname)
                     with open(true_path, 'wb') as fp:
                         fp.write(content)
                     time.sleep(2)
-                    calc_accuracy()
+                    #calc_accuracy()
                     break
                 except:
                     print('验证码未消失')
