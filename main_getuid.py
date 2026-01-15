@@ -7,7 +7,7 @@ from variables import uid_file, black_file, white_file, keywords_file, UA, repor
 
 def getuid():
 
-    proxies = {'http': None, 'https': None}
+    proxies = None
     lists = set()
     keywords = set()
 
