@@ -11,7 +11,7 @@ import random
 import re
 import os
 
-from variables import base_dir, yolo_file, siamese_file, reporter_cookie_file, proxies, UA, group, reason, uid_file, \
+from variables import base_dir, yolo_file, siamese_file, reporter_cookie_file, proxies, UA,  reason, uid_file, \
     black_file
 
 
@@ -37,7 +37,7 @@ def report():
     weights = list(tids_with_weights.values())
 
     # Playwright 浏览器
-    playwright, browser, context, page = start_chrome(headless=True, proxy_url="127.0.0.1:7890")
+    playwright, browser, context, page = start_chrome(headless=False, proxy_url="127.0.0.1:7890",storage_state=reporter_cookie_file)
     page.goto("https://space.bilibili.com")
 
     for uid in open(uid_file, 'r', encoding='utf-8'):
@@ -71,7 +71,7 @@ def report():
             return f"删除UID时发生错误: {e}"
 
         date = datetime.now().strftime('[%m-%d]')
-        aid_log_file = os.path.join(base_dir, 'record', f'{date}{uid}')
+        aid_log_file = os.path.join(base_dir, 'record',"report" ,f'{date}{uid}')
         response = session.get(f'https://api.bilibili.com/x/web-interface/card?mid={uid}',
                                timeout=(2, 2), proxies=proxies)
         data = response.json()
