@@ -3,7 +3,7 @@ from main_report import report
 from utils_proxy import switch_proxy
 
 
-def LOOP():
+def LOOP(page):
 
 
     skip=True
@@ -20,6 +20,11 @@ def LOOP():
             except Exception as e:
                 print(e)
         while True:
-            result = report()
-            if result == "0" :
-                break
+            try:
+                result = report(page)
+                print(result)
+                if result == "0" :
+                    break
+            except Exception as e:
+                print(e)
+                switch_proxy()
