@@ -4,3 +4,5 @@
 *.jpg
 *.pkl
 /User Data
+/list/chrome-win
+/record
