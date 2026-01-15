@@ -1,65 +1,43 @@
-import re
-import time
-import pickle
+import os
 from utils_chrome import start_chrome
-from variables import reporter_cookie_file, base_dir, collector_cookie_file
-
+from variables import reporter_cookie_file, collector_cookie_file
 
 def setup():
+    # ------------------- Reporter 登录 -------------------
     print("登录Reporter")
-    driver = start_chrome( headless=False,proxy_url="")
-    driver.get("https://space.bilibili.com")
-    try:
-        cookies = pickle.load(open(reporter_cookie_file, "rb"))
-        for c in cookies:
-            c.pop("sameSite", None)
-            c.pop("expiry", None)
-            try:
-                driver.add_cookie(c)
-            except:
-                pass
-        driver.refresh()
-    except:
-        print("Reporter加载cookie失败")
+    # 如果文件存在就传入 storage_state，否则为 None
+    storage_state = reporter_cookie_file if os.path.exists(reporter_cookie_file) else None
+    playwright, browser, context, page = start_chrome(headless=False, storage_state=storage_state)
+    page.goto("https://space.bilibili.com")
 
+    page.wait_for_selector(".nickname", timeout=300_000)
+    nickname = page.query_selector(".nickname").inner_text()
+    print("已登录，昵称:", nickname)
 
-    while True:
-        match = re.search(r'/(\d+)$', driver.current_url)
-        if match:
-            uid = match.group(1)
-            print(f"已登录: {uid}")
-            break
-        time.sleep(1)
+    # 保存最新状态
+    context.storage_state(path=reporter_cookie_file)
 
-    cookies = driver.get_cookies()
-    pickle.dump(cookies, open(reporter_cookie_file, "wb"))
-    driver.quit()
+    context.close()
+    browser.close()
+    playwright.stop()
 
+    # ------------------- Collector 登录 -------------------
     print("登录Collector")
-    driver = start_chrome( headless=False,proxy_url="")
-    driver.get("https://space.bilibili.com")
-    try:
-        cookies = pickle.load(open(collector_cookie_file, "rb"))
-        for c in cookies:
-            c.pop("sameSite", None)
-            c.pop("expiry", None)
-            try:
-                driver.add_cookie(c)
-            except:
-                pass
-        driver.refresh()
-    except:
-        print("Collector加载cookie失败")
+    storage_state = collector_cookie_file if os.path.exists(collector_cookie_file) else None
+    playwright, browser, context, page = start_chrome(headless=False, storage_state=storage_state)
+    page.goto("https://space.bilibili.com")
 
-    while True:
-        match = re.search(r'/(\d+)$', driver.current_url)
-        if match:
-            uid = match.group(1)
-            print(f"已登录: {uid}")
-            break
-        time.sleep(1)
+    if storage_state:
+        print("Collector 导入 cookie 成功")
+    else:
+        print("Collector 没有 cookie 文件，需要手动登录")
+    # 等待昵称元素出现，说明已经登录
+    page.wait_for_selector(".nickname", timeout=300_000)
+    nickname = page.query_selector(".nickname").inner_text()
+    print("已登录，昵称:", nickname)
 
-    cookies = driver.get_cookies()
-    pickle.dump(cookies, open(collector_cookie_file, "wb"))
-    driver.quit()
+    context.storage_state(path=collector_cookie_file)
 
+    context.close()
+    browser.close()
+    playwright.stop()
