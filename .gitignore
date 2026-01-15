@@ -2,7 +2,6 @@
 *.pyc
 *.jpg
 *.pkl
-/playwright
 *.json
 *.txt
 /list/chrome-win
