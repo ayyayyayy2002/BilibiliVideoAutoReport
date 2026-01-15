@@ -1,3 +1,5 @@
+import os
+
 from main_benchmark import benchmark
 from main_checkuid import checkuid
 from main_getuid import getuid
@@ -9,7 +11,7 @@ from mian_cut import cut
 
 
 def main():
-
+    os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "playwright"
     print("请输入数字选择要运行的函数：")
     print("1. 开始举报 LOOP()")
     print("2. 设置账号 setup()")
