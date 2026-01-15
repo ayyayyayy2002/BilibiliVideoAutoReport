@@ -5,3 +5,4 @@
 /playwright
 *.json
 *.txt
+/list/chrome-win
