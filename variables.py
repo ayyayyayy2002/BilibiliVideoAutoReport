@@ -13,10 +13,10 @@ uid_file = os.path.join(base_dir, 'list', 'uid.txt')
 white_file = os.path.join(base_dir, 'list', 'white.txt')
 black_file = os.path.join(base_dir, 'list', 'black.txt')
 keywords_file = os.path.join(base_dir, 'list', 'keyword.txt')
-true_dir = os.path.join(base_dir, "captcha", "true")
-save_dir = os.path.join(base_dir, "captcha", "pair")
-chrome_binary_path = os.path.join(base_dir, 'chrome-win', 'chrome.exe')
-chrome_driver_path = os.path.join(base_dir, 'chrome-win', 'chromedriver.exe')
+true_dir = os.path.join(base_dir, "record", "true")
+save_dir = os.path.join(base_dir, "record", "pair")
+chrome_binary_path = os.path.join(base_dir, 'list','chrome-win', 'chrome.exe')
+chrome_driver_path = os.path.join(base_dir, 'li','chrome-win', 'chromedriver.exe')
 CLASH_API_URL = "http://127.0.0.1:9090"
 
 proxies = {
