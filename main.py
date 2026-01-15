@@ -8,6 +8,8 @@ from main_report import report
 from main_setup import setup
 from mian_LOOP import LOOP
 from mian_cut import cut
+from utils_chrome import start_chrome
+from variables import reporter_cookie_file
 
 
 def main():
@@ -28,14 +30,14 @@ def main():
     choice = input("请输入：")
 
 
-    if choice == "1":
-        LOOP()
-    elif choice == "2":
+
+    if choice == "2":
         setup()
     elif choice == "3":
         getuid()
     elif choice == "4":
-        report()
+        _, _,_, page = start_chrome(headless=True, proxy_url="127.0.0.1:7890", storage_state=reporter_cookie_file)
+        report(page)
     elif choice == "5":
         checkuid()
     elif choice == "6":
@@ -45,7 +47,8 @@ def main():
     elif choice == "8":
         cut()
     else:
-        LOOP()
+        _, _,_, page = start_chrome(headless=True, proxy_url="127.0.0.1:7890", storage_state=reporter_cookie_file)
+        LOOP(page)
 
 
 if __name__ == "__main__":
