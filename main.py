@@ -11,14 +11,14 @@ from mian_cut import cut
 def main():
 
     print("请输入数字选择要运行的函数：")
-    print("1. LOOP()")
-    print("2. setup()")
-    print("3. getuid()")
-    print("4. report()")
-    print("5. checkuid()")
-    print("6. benchmark()")
-    print("7. label()")
-    print("8. cut()")
+    print("1. 开始举报 LOOP()")
+    print("2. 设置账号 setup()")
+    print("3. 获取UID getuid()")
+    print("4. 举报UID report()")
+    print("5. 查看UID checkuid()")
+    print("6. 模型测试 benchmark()")
+    print("7. 图片标记 label()")
+    print("8. 图片裁切 cut()")
 
     choice = input("请输入：")
 
