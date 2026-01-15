@@ -13,10 +13,8 @@ from variables import reporter_cookie_file
 
 
 def main():
-    import asyncio
-    print(asyncio.get_event_loop().is_running())
-
-    os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "playwright"
+    os.makedirs("temp", exist_ok=True)
+    os.environ["TEMP"] = "temp"
     print("请输入数字选择要运行的函数：")
     print("1. 开始举报 LOOP()")
     print("2. 设置账号 setup()")
