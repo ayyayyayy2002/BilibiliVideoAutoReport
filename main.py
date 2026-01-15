@@ -11,6 +11,9 @@ from mian_cut import cut
 
 
 def main():
+    import asyncio
+    print(asyncio.get_event_loop().is_running())
+
     os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "playwright"
     print("请输入数字选择要运行的函数：")
     print("1. 开始举报 LOOP()")
