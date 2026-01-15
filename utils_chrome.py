@@ -6,6 +6,7 @@ def start_chrome(headless=False, proxy_url=None, storage_state=None):
     playwright = sync_playwright().start()
 
     launch_options = {
+        "executable_path":"list/chrome-win/chrome.exe",
         "headless": headless,
         "args": [
             "--disable-blink-features=AutomationControlled",
