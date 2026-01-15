@@ -1,5 +1,5 @@
+import json
 import pickle
-
 from ml_load import load_yolo, load_siamese
 from utils_chrome import start_chrome
 from utils_proxy import switch_proxy
@@ -20,74 +20,48 @@ def report():
     YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS = load_yolo(yolo_file)
     SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS = load_siamese(siamese_file)
     uids = set()
-    cookies = pickle.load(open(reporter_cookie_file, "rb"))
+
+
+    with open(reporter_cookie_file, "r", encoding="utf-8") as f:
+        storage = json.load(f)
+
+    cookies = storage.get("cookies", [])
     COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in cookies)
     CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
 
-
-
     tids_with_weights = {
-        '2': 1,  # 违法违禁
-        '5': 1,  # 赌博诈骗
-        '10025': 1,  # 违法信息外链
-        '10014': 1,  # 涉政谣言
-        '10015': 1,  # 涉社会事件谣言
-        '10017': 1,  # 虚假不实信息
-        '10018': 1,  # 违规推广
-        '52': 1,  # 转载/自制错误
-        '10019': 1,  # 其他不规范行为
-        '7': 1,  # 人身攻击
-        '9': 1,  # 引战
-        '3': 10,  # 色情低俗
-        '10020': 1,  # 危险行为
-        '10021': 1,  # 观感不适
-        '6': 1,  # 血腥暴力
-        '10000': 1,  # 青少年不良信息
-        '10022': 1,  # 其他
+        '2': 1, '5': 1, '10025': 1, '10014': 1, '10015': 1, '10017': 1, '10018': 1, '52': 1, '10019': 1,
+        '7': 1, '9': 1, '3': 10, '10020': 1, '10021': 1, '6': 1, '10000': 1, '10022': 1
     }
     tids = list(tids_with_weights.keys())
     weights = list(tids_with_weights.values())
 
-    os.system("taskkill /f /im chromium.exe /t >nul 2>&1")
-    os.system("taskkill /f /im chromedriver.exe /t >nul 2>&1")
+    # Playwright 浏览器
+    playwright, browser, context, page = start_chrome(headless=True, proxy_url="127.0.0.1:7890")
+    page.goto("https://space.bilibili.com")
 
-    driver = start_chrome( True, "http://127.0.0.1:7890")
-    driver.get("https://space.bilibili.com")
-    for c in cookies:
-        c.pop("sameSite", None)
-        c.pop("expiry", None)
-        try:
-            driver.add_cookie(c)
-        except:
-            pass
-
-    try:
-        with open(uid_file, 'r', encoding='utf-8') as file:  # 以读取模式打开文件
-            for line in file:
-                line = line.strip()  # 去掉行首尾的空白字符
-                if line.isdigit():
-                    uids.add(line)
-    except Exception as e:
-        print(f"无法读取UID文件: {e}")
-        return "0"
+    for uid in open(uid_file, 'r', encoding='utf-8'):
+        uid = uid.strip()
+        if uid.isdigit():
+            uids.add(uid)
 
     if not uids:
         print("uid.txt 文件中没有可处理的UID，程序退出")
+        context.close()
+        browser.close()
+        playwright.stop()
         return "0"
 
     session = requests.Session()
-
-
-
     session.headers.update({
         'user-agent': UA,
         'cookie': COOKIE
     })
 
     for uid in uids:
+        # 删除已处理的 UID
         try:
-            with open(uid_file, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
+            lines = open(uid_file, 'r', encoding='utf-8').readlines()
             with open(uid_file, 'w', encoding='utf-8') as f:
                 for line in lines:
                     if line.strip() != uid:
@@ -95,32 +69,34 @@ def report():
             print(f"删除UID: {uid}")
         except Exception as e:
             return f"删除UID时发生错误: {e}"
+
         date = datetime.now().strftime('[%m-%d]')
-        aid_log_file = os.path.join(base_dir, 'record', 'report', f'{date}{uid}.txt')
-        response = session.get(f'https://api.bilibili.com/x/web-interface/card?mid={uid}', timeout=(2, 2),proxies=proxies)
+        aid_log_file = os.path.join(base_dir, 'record', f'{date}{uid}')
+        response = session.get(f'https://api.bilibili.com/x/web-interface/card?mid={uid}',
+                               timeout=(2, 2), proxies=proxies)
         data = response.json()
         name = data['data']['card']['name']
 
         print(f"UID: {uid} NAME: {name} TIME: {datetime.now().strftime('[%Y-%m-%d %H-%M-%S]')}")
         with open(aid_log_file, 'a', encoding='utf-8') as file:
-            file.write(f"UID: {uid} NAME: {name} TIME: {datetime.now().strftime('[%Y-%m-%d %H-%M-%S]')}3\n")
+            file.write(f"UID: {uid} NAME: {name} TIME: {datetime.now().strftime('[%Y-%m-%d %H-%M-%S]')}\n")
 
-        aids = []
-        titles = []
-        pics = []
+        aids, titles, pics = [], [], []
 
-        response = session.get(f'https://api.bilibili.com/x/series/recArchivesByKeywords?mid={uid}&keywords=&ps=0',
-                               timeout=(3, 3),proxies=proxies)
+        response = session.get(
+            f'https://api.bilibili.com/x/series/recArchivesByKeywords?mid={uid}&keywords=&ps=0',
+            timeout=(3, 3), proxies=proxies
+        )
         data = response.json()
         for archive in data['data']['archives']:
             aids.append(archive['aid'])
             titles.append(archive['title'])
             pics.append(archive['pic'])
         count = len(aids)
-        if name=="账号已注销":
+
+        if name == "账号已注销":
             try:
-                with open(black_file, 'r', encoding='utf-8') as f:
-                    lines = f.readlines()
+                lines = open(black_file, 'r', encoding='utf-8').readlines()
                 with open(black_file, 'w', encoding='utf-8') as f:
                     for line in lines:
                         if line.strip() != uid:
@@ -128,6 +104,7 @@ def report():
                 print(f"删除UID: {uid}")
             except Exception as e:
                 return f"删除UID时发生错误: {e}"
+
         print(f'普通视频个数:{count}')
         with open(aid_log_file, 'a', encoding='utf-8') as file:
             file.write(f"视频个数:{count}\n")
@@ -145,25 +122,32 @@ def report():
                 'attach': pic,
                 'block_author': 'false',
                 'csrf': CSRF,
-                'desc': reason.replace("title",title),
+                'desc': reason.replace("title", title),
                 'tid': f'{tid}'
             }
+
             while True:
                 try:
-                    response = session.post('https://api.bilibili.com/x/web-interface/appeal/v2/submit', data=data,timeout=(3, 3),proxies=proxies)
+                    response = session.post(
+                        'https://api.bilibili.com/x/web-interface/appeal/v2/submit',
+                        data=data, timeout=(3, 3), proxies=proxies
+                    )
                     break
                 except Exception as e:
                     print(e)
                     switch_proxy()
 
-            if "62009" in response.text or reportcount >=150:
+            if "62009" in response.text or reportcount >= 150:
                 print(f'视频{reportcount:03}:{response.text}，{title}')
                 break
             elif "-352" in response.text or "-351" in response.text:
                 print(f'视频{reportcount:03}:{response.text}\n{aid}{title}')
-                capcha(aid,driver, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
-                                SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
-                cookies = pickle.load(open(reporter_cookie_file, "rb"))
+                capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
+                       SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
+                with open(reporter_cookie_file, "r", encoding="utf-8") as f:
+                    storage = json.load(f)
+
+                cookies = storage.get("cookies", [])
                 COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in cookies)
                 session.headers.update({
                     'user-agent': UA,
@@ -178,6 +162,7 @@ def report():
             with open(aid_log_file, 'a', encoding='utf-8') as file:
                 file.write(f'{enc(int(aid))},{tid}，{title}\n')
 
-
-
+    context.close()
+    browser.close()
+    playwright.stop()
     return "0"
