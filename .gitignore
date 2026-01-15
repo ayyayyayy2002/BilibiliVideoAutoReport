@@ -4,3 +4,4 @@
 *.pkl
 /playwright
 *.json
+*.txt
