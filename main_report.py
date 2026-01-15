@@ -130,7 +130,7 @@ def report(page):
                     print(e)
                     switch_proxy()
 
-            if "62009" in response.text or reportcount >= 50:
+            if "62009" in response.text or reportcount >= 150:
                 print(f'视频{reportcount:03}:{response.text}，{title}')
                 break
             elif "-352" in response.text or "-351" in response.text:
