@@ -66,7 +66,7 @@ def report(page):
         date = datetime.now().strftime('[%m-%d]')
         aid_log_file = os.path.join(base_dir, 'record',"report" ,f'{date}{uid}.txt')
         response = session.get(f'https://api.bilibili.com/x/web-interface/card?mid={uid}',
-                               timeout=(2, 2), proxies=proxies)
+                               timeout=(2, 2), proxies=None)
         data = response.json()
         name = data['data']['card']['name']
 
@@ -78,7 +78,7 @@ def report(page):
 
         response = session.get(
             f'https://api.bilibili.com/x/series/recArchivesByKeywords?mid={uid}&keywords=&ps=0',
-            timeout=(3, 3), proxies=proxies
+            timeout=(3, 3), proxies=None
         )
         data = response.json()
         for archive in data['data']['archives']:
