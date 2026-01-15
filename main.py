@@ -13,8 +13,8 @@ from variables import reporter_cookie_file
 
 
 def main():
-    os.makedirs("temp", exist_ok=True)
-    os.environ["TEMP"] = "temp"
+
+    os.environ["TEMP"] = "record"
     print("请输入数字选择要运行的函数：")
     print("1. 开始举报 LOOP()")
     print("2. 设置账号 setup()")
