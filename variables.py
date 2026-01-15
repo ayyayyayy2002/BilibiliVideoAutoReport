@@ -3,12 +3,11 @@ import os
 base_dir = os.getcwd()
 yolo_file = os.path.join(base_dir, 'model', 'yolo.onnx')
 siamese_file = os.path.join(base_dir, 'model', 'siamese.onnx')
-reporter_cookie_file = os.path.join(base_dir, 'model','reporter.pkl')
-collector_cookie_file = os.path.join(base_dir,'model', 'collector.pkl')
+reporter_cookie_file = os.path.join(base_dir, 'model','reporter.json')
+collector_cookie_file = os.path.join(base_dir,'model', 'collector.json')
 UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 reason='标题title和封面违规,黑产,引流'
 group='哔哩哔哩'
-user_data_dir = os.path.join(base_dir,"list",  "User Data")
 uid_file = os.path.join(base_dir, 'list', 'uid.txt')
 white_file = os.path.join(base_dir, 'list', 'white.txt')
 black_file = os.path.join(base_dir, 'list', 'black.txt')
