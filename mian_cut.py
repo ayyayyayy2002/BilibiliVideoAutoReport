@@ -5,7 +5,7 @@ from ml_siamese import run_siamese
 from ml_yolo import run_yolo
 from tqdm import tqdm
 from utils_capcha import crop_detections
-from variables import true_dir, yolo_file, siamese_file, save_dir
+from variables import true_dir, yolo_file, siamese_file,  false_dir
 
 
 def cut():
@@ -33,7 +33,7 @@ def cut():
         for idx_a, row in enumerate(results_2d, start=1):
             max_idx = row.index(max(row))  # 匹配到的 classB 索引
             folder_name = f"{os.path.splitext(file)[0]}_{idx_a}"
-            folder_path = os.path.join(save_dir, folder_name)
+            folder_path = os.path.join(false_dir, folder_name)
             os.makedirs(folder_path, exist_ok=True)
 
             # 保存 A 和匹配到的 B
