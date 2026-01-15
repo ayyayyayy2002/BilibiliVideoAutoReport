@@ -1,44 +1,52 @@
-import os
-import shutil
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-
-from variables import chrome_binary_path, chrome_driver_path, user_data_dir
+import time
+from playwright.sync_api import sync_playwright
 
 
-def start_chrome(headless: bool = False, proxy_url: str = None):
-    if os.path.exists(user_data_dir):
-        shutil.rmtree(user_data_dir)
+def start_chrome(headless=False, proxy_url=None, storage_state=None):
+    playwright = sync_playwright().start()
 
-    options = webdriver.ChromeOptions()
-    options.binary_location = chrome_binary_path
-    options.add_argument(f'--user-data-dir={user_data_dir}')
-    options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_argument('--no-sandbox')  # fix:DevToolsActivePort file doesn't exist
-    options.add_argument('--disable-gpu')  # fix:DevToolsActivePort file doesn't exist
-    options.add_argument('--disable-dev-shm-usage')  # fix:DevToolsActivePort file doesn't exist
-    options.add_argument('--remote-debugging-port=9222')  # fix:DevToolsActivePort file doesn't
-    options.add_argument("--disable-sync")
-    options.add_argument("disable-cache")
-    options.add_argument('log-level=3')
+    launch_options = {
+        "headless": headless,
+        "args": [
+            "--disable-blink-features=AutomationControlled",
+            "--no-sandbox",
+            "--disable-gpu",
+            "--disable-dev-shm-usage",
+            "--disable-sync",
+            "--disable-cache",
+            "--log-level=3",
+        ],
+    }
 
     if proxy_url:
-        options.add_argument(f'--proxy-server={proxy_url}')
+        launch_options["args"].append(f"--proxy-server={proxy_url}")
     else:
-        options.add_argument('--proxy-server="direct://"')
-        options.add_argument('--proxy-bypass-list=*')
+        launch_options["args"].extend([
+            "--proxy-server=direct://",
+            "--proxy-bypass-list=*"
+        ])
 
-    if headless:
-        options.add_argument("--headless=new")
+    # 启动浏览器
+    browser = playwright.chromium.launch(**launch_options)
 
-    service = Service(executable_path=chrome_driver_path)
-    driver = webdriver.Chrome(service=service, options=options)
-    driver.set_window_size(1000, 700)
-    return driver
+    # 根据是否传 storage_state 决定 context
+    if storage_state and storage_state.strip():
+        context = browser.new_context(storage_state=storage_state)
+    else:
+        context = browser.new_context()
+
+    page = context.new_page()
+    page.set_viewport_size({"width": 1000, "height": 700})
+
+    return playwright, browser, context, page
 
 
-
-# 示例调用
 if __name__ == "__main__":
-    driver = start_chrome( headless=False, proxy_url=None)
-    driver.get("https://www.baidu.com")
+    playwright, browser, context, page = start_chrome(
+        proxy_url="127.0.0.1:7890",
+    )
+    page.goto("https://www.baidu.com")
+    time.sleep(500)
+    context.close()
+    browser.close()
+    playwright.stop()
