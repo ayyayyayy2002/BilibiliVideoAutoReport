@@ -11,7 +11,7 @@ from ml_yolo import run_yolo
 from utils_accuracy import calc_accuracy
 from utils_capcha import crop_detections
 from utils_chrome import start_chrome
-from variables import yolo_file, base_dir, siamese_file, false_dir, true_dir
+from variables import yolo_file,  siamese_file, false_dir, true_dir
 
 
 def benchmark():
