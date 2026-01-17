@@ -10,7 +10,8 @@ import random
 import re
 import os
 
-from variables import base_dir, yolo_file, siamese_file, reporter_cookie_file, proxies, UA,  reason, uid_file,black_file
+from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, reason, uid_file, \
+    black_file, limit,  report_dir
 
 
 def report(page):
@@ -72,7 +73,7 @@ def report(page):
             return f"删除UID时发生错误: {e}"
 
         date = datetime.now().strftime('[%m-%d]')
-        aid_log_file = os.path.join(base_dir, 'record',"report" ,f'{date}{uid}.txt')
+        aid_log_file = os.path.join(report_dir ,f'{date}{uid}.txt')
         response = session.get(f'https://api.bilibili.com/x/web-interface/card?mid={uid}',
                                timeout=(2, 2), proxies=None)
         data = response.json()
@@ -140,7 +141,7 @@ def report(page):
                     print(e)
                     switch_proxy()
 
-            if "62009" in response.text or reportcount >= 150:
+            if "62009" in response.text or reportcount >= limit:
                 print(f'视频{reportcount:03}:{response.text}，{title}')
                 break
             elif "-352" in response.text or "-351" in response.text:
