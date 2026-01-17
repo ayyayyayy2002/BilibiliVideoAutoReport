@@ -28,8 +28,16 @@ def report(page):
     CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
 
     tids_with_weights = {
-        '2': 1, '5': 1, '10025': 1, '10014': 1, '10015': 1, '10017': 1, '10018': 1, '52': 1, '10019': 1,
-        '7': 1, '9': 1, '3': 10, '10020': 1, '10021': 1, '6': 1, '10000': 1, '10022': 1
+        '10030': 1,#色情低俗
+        '10031': 1,#违规广告引流
+        '10032': 1,#涉政敏感
+        '10033': 1,#引战、网暴、不友善
+        '10034': 1,#传播谣言
+        '10035': 1,#涉嫌诈骗
+        '10036': 1,#引人不适
+        '10037': 1,#涉未成年人不良信息
+        '10038': 1,#封面党、标题党
+        '10039': 1,#其他
     }
     tids = list(tids_with_weights.keys())
     weights = list(tids_with_weights.values())
@@ -110,12 +118,14 @@ def report(page):
         for aid, title, pic in items:
             tid = random.choices(tids, weights=weights, k=1)[0]
             reportcount += 1
+            pic = pic.replace("http:", "")
             data = {
                 'aid': aid,
                 'attach': pic,
                 'block_author': 'false',
                 'csrf': CSRF,
                 'desc': reason.replace("title", title),
+                'meta': '',
                 'tid': f'{tid}'
             }
 
