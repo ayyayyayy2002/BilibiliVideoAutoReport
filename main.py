@@ -9,7 +9,7 @@ from main_setup import setup
 from mian_LOOP import LOOP
 from mian_cut import cut
 from utils_chrome import start_chrome
-from variables import reporter_cookie_file
+from variables import reporter_cookie_file, CLASH_PROXY_URL
 
 
 def main():
@@ -34,7 +34,7 @@ def main():
     elif choice == "3":
         getuid()
     elif choice == "4":
-        _, _,_, page = start_chrome(headless=True, proxy_url="127.0.0.1:7890", storage_state=reporter_cookie_file)
+        _, _,_, page = start_chrome(headless=True, proxy_url=CLASH_PROXY_URL, storage_state=reporter_cookie_file)
         report(page)
     elif choice == "5":
         checkuid()
@@ -45,7 +45,7 @@ def main():
     elif choice == "8":
         cut()
     else:
-        _, _,_, page = start_chrome(headless=True, proxy_url="127.0.0.1:7890", storage_state=reporter_cookie_file)
+        _, _,_, page = start_chrome(headless=True, proxy_url=CLASH_PROXY_URL, storage_state=reporter_cookie_file)
         LOOP(page)
 
 
