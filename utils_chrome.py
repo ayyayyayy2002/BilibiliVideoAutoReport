@@ -1,12 +1,14 @@
 import time
 from playwright.sync_api import sync_playwright
 
+from variables import chrome_binary_path
+
 
 def start_chrome(headless=False, proxy_url=None, storage_state=None):
     playwright = sync_playwright().start()
 
     launch_options = {
-        "executable_path":"list/chrome-win/chrome.exe",
+        "executable_path":chrome_binary_path,
         "headless": headless,
         "args": [
             "--disable-blink-features=AutomationControlled",
