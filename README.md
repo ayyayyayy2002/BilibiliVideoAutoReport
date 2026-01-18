@@ -1,5 +1,5 @@
 # BilibiliVideoAutoReport  
-哔哩哔哩批量全自动举报 Remake
+哔哩哔哩B站视频批量全自动举报 Remake
 
 ```text
 点击偏移量: (6.2, 46.0)
