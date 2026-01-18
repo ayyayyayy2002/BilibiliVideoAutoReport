@@ -44,11 +44,14 @@ def report(page):
     weights = list(tids_with_weights.values())
 
     page.goto("https://space.bilibili.com")
-
-    for uid in open(uid_file, 'r', encoding='utf-8'):
-        uid = uid.strip()
-        if uid.isdigit():
-            uids.add(uid)
+    try:
+        for uid in open(uid_file, 'r', encoding='utf-8'):
+            uid = uid.strip()
+            if uid.isdigit():
+                uids.add(uid)
+    except Exception:
+        print("读取UID文件出错")
+        return "0"
 
     if not uids:
         print("uid.txt 文件中没有可处理的UID，程序退出")
