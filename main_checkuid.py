@@ -1,5 +1,8 @@
+import os
+
 from utils_chrome import start_chrome
-from variables import uid_file
+from variables import uid_file, reporter_cookie_file
+
 
 def checkuid():
     uids = []
@@ -19,7 +22,8 @@ def checkuid():
         return "0"
 
     # 使用 Playwright 启动浏览器
-    playwright, browser, context, page = start_chrome(headless=False)
+    storage_state = reporter_cookie_file if os.path.exists(reporter_cookie_file) else None
+    playwright, browser, context, page = start_chrome(headless=False, storage_state=storage_state)
 
     try:
         for uid in uids:
