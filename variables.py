@@ -17,7 +17,8 @@ proxies = {'http': "http://127.0.0.1:7890",'https': "http://127.0.0.1:7890"}
 UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'
 reason='标题title和封面违规,黑产,引流,历史虚无,政治谣言'
 group='哔哩哔哩'
-limit=20
+limit=100
+cycle=1
 
 
 
