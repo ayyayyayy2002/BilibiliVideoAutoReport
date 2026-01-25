@@ -34,7 +34,7 @@ def main():
     elif choice == "3":
         getuid()
     elif choice == "4":
-        _, _,_, page = start_chrome(headless=True, proxy_url=CLASH_PROXY_URL, storage_state=reporter_cookie_file)
+        _, _,_, page = start_chrome(headless=False, proxy_url=CLASH_PROXY_URL, storage_state=reporter_cookie_file)
         report(page)
     elif choice == "5":
         checkuid()
