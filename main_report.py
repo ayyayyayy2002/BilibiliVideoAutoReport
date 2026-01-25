@@ -9,8 +9,7 @@ import random
 import re
 import os
 
-from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, reason, uid_file, \
-    black_file, limit,  report_dir
+from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, reason, uid_file, limit,  report_dir
 
 
 def report(page):
