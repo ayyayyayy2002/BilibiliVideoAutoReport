@@ -27,7 +27,7 @@ def checkuid():
 
     try:
         for uid in uids:
-            url = f'https://space.bilibili.com/{uid}/videos'
+            url = f'https://space.bilibili.com/{uid}/dynamic'
             print(f"打开UID：{uid}")
             page.goto(url)
             print("请按回车继续...")
