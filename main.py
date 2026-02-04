@@ -47,6 +47,7 @@ def main():
     else:
         _, _,_, page = start_chrome(headless=True, proxy_url=CLASH_PROXY_URL, storage_state=reporter_cookie_file)
         LOOP(page)
+    main()
 
 
 if __name__ == "__main__":
