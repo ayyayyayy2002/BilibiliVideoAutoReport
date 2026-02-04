@@ -35,6 +35,7 @@ def getuid():
         print(mid)
 
     data_post = {'csrf': CSRF}
+    print(CSRF)
     response = requests.post('https://api.bilibili.com/x/v2/history/toview/clear', headers=headers, data=data_post,
                              proxies=proxies, timeout=(3, 3))
     print(response.text)
@@ -56,6 +57,7 @@ def getuid():
         print(mid)
 
     data_post = {'csrf': CSRF}
+    print(CSRF)
     response = requests.post('https://api.bilibili.com/x/v2/history/toview/clear', headers=headers, data=data_post,
                              proxies=proxies, timeout=(3, 3))
     print(response.text)
