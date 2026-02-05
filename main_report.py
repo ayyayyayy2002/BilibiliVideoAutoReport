@@ -9,7 +9,8 @@ import random
 import re
 import os
 
-from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, reason, uid_file, limit,  report_dir
+from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, reason, uid_file, limit, report_dir, \
+    tids_with_weights
 
 
 def report(page):
@@ -26,18 +27,7 @@ def report(page):
     COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in cookies)
     CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
 
-    tids_with_weights = {
-        '10030': 1,#色情低俗
-        '10031': 1,#违规广告引流
-        '10032': 1,#涉政敏感
-        '10033': 1,#引战、网暴、不友善
-        '10034': 1,#传播谣言
-        '10035': 1,#涉嫌诈骗
-        '10036': 1,#引人不适
-        '10037': 1,#涉未成年人不良信息
-        '10038': 1,#封面党、标题党
-        '10039': 1,#其他
-    }
+
     tids = list(tids_with_weights.keys())
     weights = list(tids_with_weights.values())
 
