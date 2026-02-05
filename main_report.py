@@ -14,11 +14,9 @@ from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA
 
 
 def report(page):
-
     YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS = load_yolo(yolo_file)
     SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS = load_siamese(siamese_file)
     uids = set()
-
 
     with open(reporter_cookie_file, "r", encoding="utf-8") as f:
         storage = json.load(f)
@@ -26,7 +24,6 @@ def report(page):
     cookies = storage.get("cookies", [])
     COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in cookies)
     CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
-
 
     tids = list(tids_with_weights.keys())
     weights = list(tids_with_weights.values())
@@ -53,9 +50,8 @@ def report(page):
 
     for uid in uids:
 
-
         date = datetime.now().strftime('[%m-%d]')
-        aid_log_file = os.path.join(report_dir ,f'{date}{uid}.txt')
+        aid_log_file = os.path.join(report_dir, f'{date}{uid}.txt')
         response = session.get(f'https://api.bilibili.com/x/web-interface/card?mid={uid}',
                                timeout=(2, 2), proxies=None)
         data = response.json()
@@ -77,8 +73,6 @@ def report(page):
             titles.append(archive['title'])
             pics.append(archive['pic'])
         count = len(aids)
-
-
 
         print(f'普通视频个数:{count}')
         with open(aid_log_file, 'a', encoding='utf-8') as file:
@@ -117,7 +111,6 @@ def report(page):
             if "62009" in response.text or reportcount >= limit:
                 print(f'视频{reportcount:03}:{response.text}，{title}')
 
-   
                 try:
                     lines = open(uid_file, 'r', encoding='utf-8').readlines()
                     with open(uid_file, 'w', encoding='utf-8') as f:
@@ -127,10 +120,6 @@ def report(page):
                     print(f"删除UID: {uid}")
                 except Exception as e:
                     return f"删除UID时发生错误: {e}"
-
-
-
-
 
                 break
             elif "-352" in response.text or "-351" in response.text:
