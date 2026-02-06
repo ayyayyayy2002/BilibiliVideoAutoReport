@@ -3,7 +3,9 @@ import requests
 import re
 import os
 
-from variables import uid_file, black_file, white_file, keywords_file, UA, reporter_cookie_file, collector_cookie_file
+from variables import uid_file, black_file, white_file, keywords_file, UA, reporter_cookie_file, collector_cookie_file, \
+    timeout_request
+
 
 def getuid():
 
@@ -26,7 +28,7 @@ def getuid():
     print(f'稍后再看：举报账号')
     headers = {'cookie': COOKIE, 'user-agent': UA}
     response = requests.get('https://api.bilibili.com/x/v2/history/toview', headers=headers, proxies=proxies,
-                            timeout=(3, 3))
+                            timeout=timeout_request)
     print(response)
     data = response.json()
     for item in data['data']['list']:
@@ -37,7 +39,7 @@ def getuid():
     data_post = {'csrf': CSRF}
     print(CSRF)
     response = requests.post('https://api.bilibili.com/x/v2/history/toview/clear', headers=headers, data=data_post,
-                             proxies=proxies, timeout=(3, 3))
+                             proxies=proxies, timeout=timeout_request)
     print(response.text)
 
     # ------------------ Collector ------------------
@@ -49,7 +51,7 @@ def getuid():
     print(f'稍后再看：主号')
     headers = {'cookie': COOKIE, 'user-agent': UA}
     response = requests.get('https://api.bilibili.com/x/v2/history/toview', headers=headers, proxies=proxies,
-                            timeout=(3, 3))
+                            timeout=timeout_request)
     data = response.json()
     for item in data['data']['list']:
         mid = item['owner']['mid']
@@ -59,7 +61,7 @@ def getuid():
     data_post = {'csrf': CSRF}
     print(CSRF)
     response = requests.post('https://api.bilibili.com/x/v2/history/toview/clear', headers=headers, data=data_post,
-                             proxies=proxies, timeout=(3, 3))
+                             proxies=proxies, timeout=timeout_request)
     print(response.text)
 
     # ------------------ 合并黑白名单 ------------------
@@ -92,7 +94,7 @@ def getuid():
             print(f"正在搜索关键词：{keyword}")
             response = requests.get(
                 f'https://api.bilibili.com/x/web-interface/search/type?keyword={keyword}&search_type=video',
-                headers=headers, proxies=proxies, timeout=(3, 3))
+                headers=headers, proxies=proxies, timeout=timeout_request)
             data = response.json()
             for item in data.get("data", {}).get("result", []):
                 mid = item.get("mid")
