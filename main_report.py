@@ -81,7 +81,7 @@ def report(page):
                     seconds = int(parts[0])
                 durations.append(seconds)
 
-        print(aids, titles, pics, durations)
+
         dynamic = len(aids)
         print(f'动态视频个数:{dynamic}')
         with open(aid_log_file, 'a', encoding='utf-8') as file:
