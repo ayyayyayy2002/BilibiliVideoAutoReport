@@ -9,8 +9,8 @@ import random
 import re
 import os
 
-from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, reason, uid_file, limit, report_dir, \
-    tids_with_weights
+from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, uid_file, limit, report_dir, \
+    tids_with_weights, timeout_request, reasons
 
 
 def report(page):
@@ -49,42 +49,72 @@ def report(page):
     })
 
     for uid in uids:
-
-        date = datetime.now().strftime('[%m-%d]')
+        date = datetime.now().strftime('[%Y-%m-%d %H-%M-%S]')
         aid_log_file = os.path.join(report_dir, f'{date}{uid}.txt')
-        response = session.get(f'https://api.bilibili.com/x/web-interface/card?mid={uid}',
-                               timeout=(2, 2), proxies=None)
-        data = response.json()
-        name = data['data']['card']['name']
-
-        print(f"UID: {uid} NAME: {name} TIME: {datetime.now().strftime('[%Y-%m-%d %H-%M-%S]')}")
+        print(f"开始举报: https://space.bilibili.com/{uid} TIME: {date}")
         with open(aid_log_file, 'a', encoding='utf-8') as file:
-            file.write(f"UID: {uid} NAME: {name} TIME: {datetime.now().strftime('[%Y-%m-%d %H-%M-%S]')}\n")
+            file.write(f"UID: {uid} TIME: {date}\n")
+        aids, titles, pics,durations ,seasons= [], [], [],[],[]
+        reportcount = 0
 
-        aids, titles, pics = [], [], []
+        # ------------------- 合集视频部分 -------------------
+        response = session.get(
+            f'https://api.bilibili.com/x/polymer/web-space/seasons_series_list?mid={uid}&page_size=20&page_num=1',
+            timeout=timeout_request, proxies=None
+        )
+        data = response.json()
+        for season in data['data']['items_lists']['seasons_list']:
+            seasons.append(season['meta']['season_id'])
+        for season in seasons:
+            response = session.get(
+                f'https://api.bilibili.com/x/polymer/web-space/seasons_archives_list?mid={uid}&season_id={season}&sort_reverse=false&page_size=30&page_num=1',
+                timeout=timeout_request, proxies=None
+            )
+            data = response.json()
+            for archive in data['data']['archives']:
+                aids.append(archive['aid'])
+                titles.append(archive['title'])
+                pics.append(archive['pic'])
+                durations.append(archive['duration'])
 
+        count = len(aids)
+        print(f'合集视频个数:{count}')
+        with open(aid_log_file, 'a', encoding='utf-8') as file:
+            file.write(f"合集视频个数:{count}\n")
+
+        # ------------------- 投稿视频部分 -------------------
         response = session.get(
             f'https://api.bilibili.com/x/series/recArchivesByKeywords?mid={uid}&keywords=&ps=0',
-            timeout=(3, 3), proxies=None
+            timeout=timeout_request, proxies=None
         )
         data = response.json()
         for archive in data['data']['archives']:
             aids.append(archive['aid'])
             titles.append(archive['title'])
             pics.append(archive['pic'])
-        count = len(aids)
+            durations.append(archive['duration'])
 
-        print(f'普通视频个数:{count}')
+        items = list(zip(aids, titles, pics, durations))
+        if count==0:
+            random.shuffle(items)
+
+
+        count=len(aids)-count
+        print(f'投稿视频个数:{count}')
         with open(aid_log_file, 'a', encoding='utf-8') as file:
-            file.write(f"视频个数:{count}\n")
+            file.write(f"投稿视频个数:{count}\n")
 
-        print(f'\nhttps://space.bilibili.com/{uid}\n')
-        reportcount = 0
-
-        items = list(zip(aids, titles, pics))
-        random.shuffle(items)
-        for aid, title, pic in items:
+        for aid, title, pic ,duration in items:
             tid = random.choices(tids, weights=weights, k=1)[0]
+            reason=random.choice(reasons)
+            duration=random.randint(1, duration)
+            m = duration // 60
+            s = duration % 60
+            if m > 0:
+                duration=f"{m}分{s}秒"
+            else:
+                duration=f"{s}秒"
+            reason = reason.replace("title", title).replace("duration", duration)
             reportcount += 1
             pic = pic.replace("http:", "")
             data = {
@@ -92,16 +122,17 @@ def report(page):
                 'attach': pic,
                 'block_author': 'false',
                 'csrf': CSRF,
-                'desc': reason.replace("title", title),
+                'desc': reason,
                 'meta': '',
                 'tid': f'{tid}'
             }
+
 
             while True:
                 try:
                     response = session.post(
                         'https://api.bilibili.com/x/web-interface/appeal/v2/submit',
-                        data=data, timeout=(3, 3), proxies=proxies
+                        data=data, timeout=timeout_request, proxies=proxies
                     )
                     break
                 except Exception as e:
