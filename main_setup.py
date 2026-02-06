@@ -10,7 +10,7 @@ def setup():
     playwright, browser, context, page = start_chrome(headless=False, storage_state=storage_state)
     page.goto("https://space.bilibili.com")
 
-    page.wait_for_selector(".nickname", timeout=300_000)
+    page.wait_for_selector(".nickname", timeout=300000)
     nickname = page.query_selector(".nickname").inner_text()
     print("已登录，昵称:", nickname)
 
@@ -32,7 +32,7 @@ def setup():
     else:
         print("Collector 没有 cookie 文件，需要手动登录")
     # 等待昵称元素出现，说明已经登录
-    page.wait_for_selector(".nickname", timeout=300_000)
+    page.wait_for_selector(".nickname", timeout=300000)
     nickname = page.query_selector(".nickname").inner_text()
     print("已登录，昵称:", nickname)
 
