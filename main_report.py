@@ -56,6 +56,36 @@ def report(page):
             file.write(f"UID: {uid} TIME: {date}\n")
         aids, titles, pics,durations ,seasons= [], [], [],[],[]
         reportcount = 0
+        # ------------------- 动态视频部分 -------------------
+        response = session.get(
+            f'https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?offset=&host_mid={uid}&timezone_offset=-480&platform=web&type=video&features=itemOpusStyle,listOnlyfans,opusBigCover',
+            timeout=timeout_request, proxies=None
+        )
+        data = response.json()
+        for item in data['data']['items']:
+            if item.get('type') != 'DYNAMIC_TYPE_AV':
+                continue  # 非动态视频跳过
+            major = item.get('modules', {}).get('module_dynamic', {}).get('major', {})
+            archive = major.get('archive')
+            if archive:
+                aids.append(archive.get('aid'))
+                titles.append(archive.get('title'))
+                pics.append(archive.get('cover'))
+                duration_text = archive.get('duration_text', '0:00')
+                parts = duration_text.split(':')
+                if len(parts) == 2:
+                    seconds = int(parts[0]) * 60 + int(parts[1])
+                elif len(parts) == 3:
+                    seconds = int(parts[0]) * 3600 + int(parts[1]) * 60 + int(parts[2])
+                else:
+                    seconds = int(parts[0])
+                durations.append(seconds)
+
+        print(aids, titles, pics, durations)
+        dynamic = len(aids)
+        print(f'动态视频个数:{dynamic}')
+        with open(aid_log_file, 'a', encoding='utf-8') as file:
+            file.write(f"动态视频个数:{dynamic}\n")
 
         # ------------------- 合集视频部分 -------------------
         response = session.get(
@@ -77,10 +107,10 @@ def report(page):
                 pics.append(archive['pic'])
                 durations.append(archive['duration'])
 
-        count = len(aids)
-        print(f'合集视频个数:{count}')
+        series = len(aids)-dynamic
+        print(f'合集视频个数:{series}')
         with open(aid_log_file, 'a', encoding='utf-8') as file:
-            file.write(f"合集视频个数:{count}\n")
+            file.write(f"合集视频个数:{series}\n")
 
         # ------------------- 投稿视频部分 -------------------
         response = session.get(
@@ -95,11 +125,11 @@ def report(page):
             durations.append(archive['duration'])
 
         items = list(zip(aids, titles, pics, durations))
-        if count==0:
+        if dynamic==series==0:
             random.shuffle(items)
 
 
-        count=len(aids)-count
+        count=len(aids)-dynamic-series
         print(f'投稿视频个数:{count}')
         with open(aid_log_file, 'a', encoding='utf-8') as file:
             file.write(f"投稿视频个数:{count}\n")
