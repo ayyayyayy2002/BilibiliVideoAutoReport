@@ -11,7 +11,7 @@ from ml_yolo import run_yolo
 from utils_accuracy import calc_accuracy
 from utils_capcha import crop_detections
 from utils_chrome import start_chrome
-from variables import yolo_file,  siamese_file, false_dir, true_dir
+from variables import yolo_file, siamese_file, false_dir, true_dir, timeout_browser
 
 
 def benchmark():
@@ -27,18 +27,18 @@ def benchmark():
 
             # 转 Selenium 的 WebDriverWait 逻辑为 Playwright selector
             input1 = page.wait_for_selector('//*[@id="app-main"]/div/div[2]/div[3]/div[2]/div[1]/div[1]/input',
-                                            timeout=5000)
+                                            timeout=timeout_browser)
             input1.fill("11111")
 
             input2 = page.wait_for_selector('//*[@id="app-main"]/div/div[2]/div[3]/div[2]/div[1]/div[3]/input',
-                                            timeout=5000)
+                                            timeout=timeout_browser)
             input2.fill("22222")
 
-            submit = page.wait_for_selector('//*[@id="app-main"]/div/div[2]/div[3]/div[2]/div[2]/div[2]', timeout=5000)
+            submit = page.wait_for_selector('//*[@id="app-main"]/div/div[2]/div[3]/div[2]/div[2]/div[2]', timeout=timeout_browser)
             submit.click()
 
             while True:
-                img_elem = page.wait_for_selector('//*[@class="geetest_item_wrap"]', timeout=5000)
+                img_elem = page.wait_for_selector('//*[@class="geetest_item_wrap"]', timeout=timeout_browser)
                 f = img_elem.get_attribute('style')
                 attempt = 0
                 while ('url("' not in f) and (attempt < 10):
@@ -47,7 +47,7 @@ def benchmark():
                     time.sleep(0.5)
                 print(attempt)
                 url = re.search(r'url\("([^"]+?)\?[^"]*"\);', f).group(1)
-                content = requests.get(url, timeout=(3, 3), proxies=None).content
+                content = requests.get(url, timeout=timeout, proxies=None).content
 
                 nparr = numpy.frombuffer(content, numpy.uint8)
                 img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
