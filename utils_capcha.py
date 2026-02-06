@@ -9,7 +9,7 @@ import re
 import os
 from utils_accuracy import calc_accuracy
 from utils_proxy import switch_proxy
-from variables import reporter_cookie_file, false_dir, true_dir
+from variables import reporter_cookie_file, false_dir, true_dir, timeout_request, timeout_browser
 
 
 def crop_detections(img, classA, classB):
@@ -43,15 +43,15 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
             # 填写违规说明
             page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/label/div[2]/textarea') \
                 .fill('视频封面标题以及内容违规')
-            page.locator('xpath=/html/body/div/div[3]/div[2]').click(timeout=3000)
-            page.wait_for_selector('.geetest_item_wrap', timeout=3000)
+            page.locator('xpath=/html/body/div/div[3]/div[2]').click(timeout=timeout_browser)
+            page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
             break
         except Exception as e:
             print("验证码元素未出现",e)
             switch_proxy()
 
     while True:
-        img_elem = page.wait_for_selector('.geetest_item_wrap', timeout=3000)
+        img_elem = page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
         f = img_elem.get_attribute('style')
         attempt = 0
         while 'url("' not in f and attempt < 10:
@@ -62,7 +62,7 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
 
         url = re.search(r'url\("([^"]+?)\?[^"]*"\);', f).group(1)
         proxies = None
-        content = requests.get(url, timeout=(3, 3), proxies=proxies).content
+        content = requests.get(url, timeout=timeout_request, proxies=proxies).content
 
         nparr = numpy.frombuffer(content, numpy.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
@@ -93,14 +93,14 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
             time.sleep(0.5)
 
         try:
-            page.locator('.geetest_commit_tip').click(timeout=1000)
+            page.locator('.geetest_commit_tip').click()
         except Exception:
-            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/div/a[2]').click(timeout=1000)
+            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/div/a[2]').click()
             print("无法提交验证码")
             time.sleep(2)
             continue
         try:
-            page.wait_for_selector('.geetest_item_wrap', state='hidden', timeout=3000)
+            page.wait_for_selector('.geetest_item_wrap', state='hidden', timeout=timeout_browser)
             print("验证码正确")
             fname = os.path.basename(urlparse(unquote(url)).path)
             true_path = os.path.join(true_dir, fname)
