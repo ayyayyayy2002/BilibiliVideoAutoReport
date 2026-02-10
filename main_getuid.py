@@ -51,7 +51,7 @@ def getuid():
         data = response.json()
 
         for item in data['data']['list']:
-            lists.add(item['mid'])
+            lists.add(str(item['mid']))
 
         if len(data['data']['list']) < 24:
             break
