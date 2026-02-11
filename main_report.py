@@ -45,6 +45,7 @@ def report(page):
     session = requests.Session()
     session.headers.update({
         'user-agent': UA,
+        'cookie': COOKIE
     })
 
     for uid in uids:
@@ -133,13 +134,12 @@ def report(page):
         with open(aid_log_file, 'a', encoding='utf-8') as file:
             file.write(f"投稿视频个数:{count}\n")
         # ------------------- 更新凭据 开始举报 -------------------
-        session.headers.update({
-            'user-agent': UA,
-            'cookie': COOKIE
-        })
+
+
         data = f'mid={uid}&reason=2,1,3&reason_v2=6&csrf={CSRF}'
-        response = session.post('https://space.bilibili.com/ajax/report/add', cookies=cookies, proxies=proxies, data=data)
-        print(response)
+        response = session.post('https://space.bilibili.com/ajax/report/add', timeout=timeout_request, proxies=proxies, data=data)
+        print(response.text)
+
 
         for aid, title, pic ,duration in items:
             tid = random.choices(tids, weights=weights, k=1)[0]
