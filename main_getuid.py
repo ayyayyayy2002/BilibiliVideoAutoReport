@@ -22,7 +22,6 @@ def getuid():
         storage = json.load(f)
     cookies = storage.get("cookies", [])
     COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in cookies)
-    #CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
     uid = None
     for c in cookies:
         if c.get("name") == "DedeUserID":
@@ -32,38 +31,33 @@ def getuid():
     headers = {'cookie': COOKIE, 'user-agent': UA}
     response = requests.get('https://api.bilibili.com/x/v2/history/toview', headers=headers, proxies=None,
                             timeout=timeout_request)
-    print(response)
     data = response.json()
     for item in data['data']['list']:
         mid = item['owner']['mid']
         lists.add(str(mid))
         print(mid)
 
-    """
-    response = requests.post('https://api.bilibili.com/x/v2/history/toview/clear', headers=headers, data=data_post,
-                             proxies=proxies, timeout=timeout_request)
-    print(response.text)
-    """
+
+
     print(f'关注列表：举报账号')
-    pn = 1
-    while True:
-        response = requests.get(f'https://api.bilibili.com/x/relation/followings?order=desc&order_type=&vmid={uid}&pn={pn}&ps=24',headers=headers,timeout=timeout_request,proxies=None)
-        data = response.json()
-
-        for item in data['data']['list']:
-            lists.add(str(item['mid']))
-
-        if len(data['data']['list']) < 24:
-            break
-
-        pn += 1
+    try:
+        pn = 1
+        while True:
+            response = requests.get(f'https://api.bilibili.com/x/relation/followings?order=desc&order_type=&vmid={uid}&pn={pn}&ps=24',headers=headers,timeout=timeout_request,proxies=None)
+            data = response.json()
+            for item in data['data']['list']:
+                lists.add(str(item['mid']))
+            if len(data['data']['list']) < 24:
+                break
+            pn += 1
+    except Exception:
+        print("关注列表出错")
 
     # ------------------ Collector ------------------
     with open(collector_cookie_file, "r", encoding="utf-8") as f:
         storage = json.load(f)
     cookies = storage.get("cookies", [])
     COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in cookies)
-    CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
     print(f'稍后再看：主号')
     headers = {'cookie': COOKIE, 'user-agent': UA}
     response = requests.get('https://api.bilibili.com/x/v2/history/toview', headers=headers,timeout=timeout_request,proxies=None)
