@@ -11,7 +11,7 @@ from ml_yolo import run_yolo
 from utils_accuracy import calc_accuracy
 from utils_capcha import crop_detections
 from utils_chrome import start_chrome
-from variables import yolo_file, siamese_file, false_dir, true_dir, timeout_browser
+from variables import yolo_file, siamese_file, false_dir, true_dir, timeout_browser, timeout_request
 
 
 def benchmark():
@@ -47,7 +47,7 @@ def benchmark():
                     time.sleep(0.5)
                 print(attempt)
                 url = re.search(r'url\("([^"]+?)\?[^"]*"\);', f).group(1)
-                content = requests.get(url, timeout=timeout, proxies=None).content
+                content = requests.get(url, timeout=timeout_request, proxies=None).content
 
                 nparr = numpy.frombuffer(content, numpy.uint8)
                 img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
