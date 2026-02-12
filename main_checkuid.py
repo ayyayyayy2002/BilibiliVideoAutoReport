@@ -1,7 +1,7 @@
 import os
 
 from utils_chrome import start_chrome
-from variables import uid_file, reporter_cookie_file, timeout_browser
+from variables import uid_file, reporter_cookie_file, CLASH_PROXY_URL
 
 
 def checkuid():
@@ -23,7 +23,7 @@ def checkuid():
 
     # 使用 Playwright 启动浏览器
     storage_state = reporter_cookie_file if os.path.exists(reporter_cookie_file) else None
-    playwright, browser, context, page = start_chrome(headless=False, storage_state=storage_state)
+    playwright, browser, context, page = start_chrome(headless=False, storage_state=storage_state,proxy_url=CLASH_PROXY_URL)
 
     try:
         for uid in uids:
