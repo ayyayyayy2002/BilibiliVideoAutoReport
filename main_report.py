@@ -50,7 +50,7 @@ def report(page):
 
     for uid in uids:
         date = datetime.now().strftime('[%Y-%m-%d %H-%M-%S]')
-        aid_log_file = os.path.join(report_dir, f'{date}{uid}.txt')
+        aid_log_file = os.path.join(report_dir, f'{date}{uid}.log')
         print(f"开始举报: https://space.bilibili.com/{uid} TIME: {date}")
         with open(aid_log_file, 'a', encoding='utf-8') as file:
             file.write(f"UID: {uid} TIME: {date}\n")
