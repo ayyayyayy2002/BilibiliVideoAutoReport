@@ -8,9 +8,7 @@ import requests
 import random
 import re
 import os
-
-from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, uid_file, limit, report_dir, \
-    tids_with_weights, timeout_request, reasons
+from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, uid_file, limit, report_dir,tids_with_weights, timeout_request, reasons
 
 
 def report(page):
@@ -59,7 +57,7 @@ def report(page):
         # ------------------- 动态视频部分 -------------------
         response = session.get(
             f'https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?offset=&host_mid={uid}&timezone_offset=-480&platform=web&type=video&features=itemOpusStyle,listOnlyfans,opusBigCover',
-            timeout=timeout_request, proxies=None
+            timeout=timeout_request, proxies=proxies
         )
         data = response.json()
         for item in data['data']['items']:
@@ -90,7 +88,7 @@ def report(page):
         # ------------------- 合集视频部分 -------------------
         response = session.get(
             f'https://api.bilibili.com/x/polymer/web-space/seasons_series_list?mid={uid}&page_size=20&page_num=1',
-            timeout=timeout_request, proxies=None
+            timeout=timeout_request, proxies=proxies
         )
         data = response.json()
         for season in data['data']['items_lists']['seasons_list']:
@@ -98,7 +96,7 @@ def report(page):
         for season in seasons:
             response = session.get(
                 f'https://api.bilibili.com/x/polymer/web-space/seasons_archives_list?mid={uid}&season_id={season}&sort_reverse=false&page_size=30&page_num=1',
-                timeout=timeout_request, proxies=None
+                timeout=timeout_request, proxies=proxies
             )
             data = response.json()
             for archive in data['data']['archives']:
@@ -115,7 +113,7 @@ def report(page):
         # ------------------- 投稿视频部分 -------------------
         response = session.get(
             f'https://api.bilibili.com/x/series/recArchivesByKeywords?mid={uid}&keywords=&ps=0',
-            timeout=timeout_request, proxies=None
+            timeout=timeout_request, proxies=proxies
         )
         data = response.json()
         for archive in data['data']['archives']:
