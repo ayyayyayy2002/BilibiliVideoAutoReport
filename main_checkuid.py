@@ -30,14 +30,6 @@ def checkuid():
             url = f'https://space.bilibili.com/{uid}/dynamic'
             print(f"打开UID：{uid}")
             page.goto(url)
-            try:
-                page.wait_for_selector('.space-follow-btn', timeout=timeout_browser)
-                btn = page.locator('.space-follow-btn').filter(has_not_text='已关注')
-                if btn.count() > 0:
-                    btn.first.click()
-            except Exception :
-                print("账号被封禁")
-
 
             print("请按回车继续...")
             input()  # 等待用户操作
