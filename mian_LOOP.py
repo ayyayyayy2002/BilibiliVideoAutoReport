@@ -24,6 +24,7 @@ def LOOP(page):
                     break
             except Exception as e:
                 print(e)
+                switch_proxy()
         while True:
             try:
                 result = report(page)
