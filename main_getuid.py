@@ -36,7 +36,7 @@ def getuid():
         mid = item['owner']['mid']
         lists.add(str(mid))
         print(mid)
-    print('稍后再看：收集账号')
+    print('稍后再看：采集账号')
     headers = {'cookie': collector_cookie, 'user-agent': UA}
     response = requests.get('https://api.bilibili.com/x/v2/history/toview', headers=headers,timeout=timeout_request,proxies=proxies)
     data = response.json()
