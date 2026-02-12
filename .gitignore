@@ -3,5 +3,5 @@
 *.jpg
 *.pkl
 *.json
-*.txt
+*.log
 /list/chrome-win
