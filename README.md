@@ -32,10 +32,11 @@
 ---
 
 ## 🚀 使用方法
-1. 下载并安装[Python 3.10.11](https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe)
-2. 下载并解压[chrome-win](https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Win_x64%2F1230501%2Fchrome-win.zip?generation=1701250567654085&alt=media)到 list 文件夹
-3. 双击并运行`1环境.bat`
-4. 双击并运行`2运行.bat`
+1. 下载[整个项目](https://github.com/ayyayyayy2002/BilibiliVideoAutoReport/archive/refs/heads/main.zip)并解压到任意目录
+2. 下载安装[Python 3.10.11](https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe)
+3. 下载并解压[chrome-win](https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Win_x64%2F1230501%2Fchrome-win.zip?generation=1701250567654085&alt=media)到 list 文件夹
+4. 双击并运行`1环境.bat`等待完全配置完成,失败请开启代理重试
+5. 双击并运行`2运行.bat`用数字键选择功能
 
 ### 一、账号角色说明
 
