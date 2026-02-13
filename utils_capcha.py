@@ -8,7 +8,6 @@ import cv2
 import re
 import os
 from utils_accuracy import calc_accuracy
-from utils_proxy import switch_proxy
 from variables import reporter_cookie_file, false_dir, true_dir, timeout_request, timeout_browser
 
 
@@ -47,7 +46,8 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
             break
         except Exception as e:
             print("验证码元素未出现",e)
-            switch_proxy()
+            break
+
 
     while True:
         img_elem = page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
