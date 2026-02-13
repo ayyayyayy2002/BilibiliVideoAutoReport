@@ -22,7 +22,7 @@ report_dir = os.path.join("record", "report")# 举报日志目录
 # 浏览器路径与超时设置
 chrome_binary_path = os.path.join('list', 'chrome-win', 'chrome.exe')  # Chrome 可执行文件
 timeout_request = (3, 3)   # 请求超时时间 (连接, 读取)
-timeout_browser = 3000     # 浏览器操作超时 (毫秒)
+timeout_browser = 5000     # 浏览器操作超时 (毫秒)
 
 # 代理设置
 CLASH_API_URL = "http://127.0.0.1:9090"     # Clash API 地址
