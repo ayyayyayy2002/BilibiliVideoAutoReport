@@ -1,5 +1,7 @@
 import os
 
+from tqdm import tqdm
+
 from utils_chrome import start_chrome
 from variables import uid_file, reporter_cookie_file, CLASH_PROXY_URL
 
@@ -26,7 +28,7 @@ def checkuid():
     playwright, browser, context, page = start_chrome(headless=False, storage_state=storage_state,proxy_url=CLASH_PROXY_URL)
 
     try:
-        for uid in uids:
+        for uid in tqdm(uids):
             url = f'https://space.bilibili.com/{uid}/dynamic'
             print(f"打开UID：{uid}")
             page.goto(url)
