@@ -32,36 +32,35 @@ def crop_detections(img, classA, classB):
 
 def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
     while True:
-        try:
-            url = f"https://www.bilibili.com/appeal/?avid={aid}"
-            page.goto(url, wait_until="domcontentloaded")
-
-            # 点击违规申诉按钮
-            page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div/div/div[2]').click(timeout=3000)
-
-            # 填写违规说明
-            page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/label/div[2]/textarea').fill('视频封面标题以及内容违规')
-            page.locator('xpath=/html/body/div/div[3]/div[2]').click(timeout=timeout_browser)
-            page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
-            break
-        except Exception as e:
-            print("验证码元素未出现",e)
-            context = page.context
-            context.storage_state(path=reporter_cookie_file)
-            return
+        # try:
+        url = f"https://www.bilibili.com/appeal/?avid={aid}"
+        page.goto(url, wait_until="domcontentloaded")
+        page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div/div/div[2]').click(timeout=timeout_browser)
+        page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/label/div[2]/textarea').fill('视频封面标题以及内容违规')
+        page.locator('xpath=/html/body/div/div[3]/div[2]').click(timeout=timeout_browser)
+        page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
+        break
+        # except Exception as e:
+        #     print("验证码元素未出现",e)
+        #     context = page.context
+        #     context.storage_state(path=reporter_cookie_file)
+        #     return
 
 
     while True:
-        img_elem = page.wait_for_selector('.geetest_item_wrap', timeout=5000)
-        f = img_elem.get_attribute('style')
-        attempt = 0
-        while 'url("' not in f and attempt < 20:
-            f = img_elem.get_attribute('style')
-            attempt += 1
-            time.sleep(0.5)
-        print(attempt)
-
-        url = re.search(r'url\("([^"]+?)\?[^"]*"\);', f).group(1)
+        wrap = page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
+        page.wait_for_function(
+            """el => {
+                const bg = window.getComputedStyle(el).backgroundImage;
+                return bg && bg.includes('url');
+            }""",
+            arg=wrap,
+            timeout=timeout_browser
+        )
+        style = wrap.evaluate(
+            "el => window.getComputedStyle(el).backgroundImage"
+        )
+        url = re.search(r'url\(["\']?(.*?)["\']?\)', style).group(1)
         content = requests.get(url, timeout=timeout_request, proxies=None).content
 
         nparr = numpy.frombuffer(content, numpy.uint8)
@@ -73,12 +72,23 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
         results_2d = run_siamese(cropped_A, cropped_B, SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
 
         selected = []
-        for row in results_2d:
+        available_B = classB.copy()  # 剩余可选 B
+        results_matrix = [row.copy() for row in results_2d]  # 剩余相似度矩阵
+
+        for row_idx, row in enumerate(results_matrix):
+            if not available_B:
+                break  # 没有可选 B 时退出
+            # 找出当前 row 中最大值的索引（在 available_B 中）
             max_idx = row.index(max(row))
-            selected.append(classB[max_idx])
+            selected.append(available_B[max_idx])
+            # 删除已选 B
+            del available_B[max_idx]
+            # 删除 results_matrix 中对应列
+            for r in results_matrix:
+                del r[max_idx]
 
         # Playwright 点击
-        img_box = img_elem.bounding_box()
+        img_box = wrap.bounding_box()
         elem_size = img_box['width']
         orig_size = 344
 
@@ -91,14 +101,7 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
             page.mouse.click(img_box['x'] + elem_size / 2 + x_offset,
                              img_box['y'] + elem_size / 2 + y_offset)
             time.sleep(0.5)
-
-        try:
-            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/a').click(timeout=100)#提交验证码
-        except Exception:
-            print("无法提交验证码,点击刷新")
-            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/div/a[2]').click(timeout=100)#点击刷新
-            time.sleep(2)
-            continue
+        page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/a').click(timeout=timeout_browser)#提交验证码
         try:
             page.wait_for_selector('.geetest_item_wrap', state='hidden', timeout=timeout_browser)
             print("验证码正确")
