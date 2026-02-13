@@ -41,8 +41,7 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
             page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div/div/div[2]').click(timeout=3000)
 
             # 填写违规说明
-            page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/label/div[2]/textarea') \
-                .fill('视频封面标题以及内容违规')
+            page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/label/div[2]/textarea').fill('视频封面标题以及内容违规')
             page.locator('xpath=/html/body/div/div[3]/div[2]').click(timeout=timeout_browser)
             page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
             break
@@ -61,8 +60,7 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
         print(attempt)
 
         url = re.search(r'url\("([^"]+?)\?[^"]*"\);', f).group(1)
-        proxies = None
-        content = requests.get(url, timeout=timeout_request, proxies=proxies).content
+        content = requests.get(url, timeout=timeout_request, proxies=None).content
 
         nparr = numpy.frombuffer(content, numpy.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
@@ -93,10 +91,10 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
             time.sleep(0.5)
 
         try:
-            page.locator('.geetest_commit_tip').click()
+            page.locator('.geetest_commit_tip').click(force=True)#提交验证码
         except Exception:
-            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/div/a[2]').click()
-            print("无法提交验证码")
+            print("无法提交验证码,点击刷新")
+            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/div/a[2]').click(force=True)#点击刷新
             time.sleep(2)
             continue
         try:
