@@ -1,22 +1,49 @@
 import os
-yolo_file = os.path.join( 'model', 'yolo.onnx')
-siamese_file = os.path.join( 'model', 'siamese.onnx')
-reporter_cookie_file = os.path.join( 'model','reporter.json')
-collector_cookie_file = os.path.join('model', 'collector.json')
-uid_file = os.path.join( 'list', 'uid.txt')
-white_file = os.path.join( 'list', 'white.txt')
-black_file = os.path.join( 'list', 'black.txt')
-keywords_file = os.path.join( 'list', 'keyword.txt')
-true_dir = os.path.join( "record", "true")
-false_dir = os.path.join( "record", "false")
-report_dir= os.path.join( "record", "report")
-chrome_binary_path = os.path.join( 'list','chrome-win', 'chrome.exe')
-timeout_request= (3, 3)
-timeout_browser=3000
-CLASH_API_URL = "http://127.0.0.1:9090"
-CLASH_PROXY_URL="127.0.0.1:7890"
-proxies = {'http': "http://127.0.0.1:7890",'https': "http://127.0.0.1:7890"}
-UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'
+
+# 模型路径
+yolo_file = os.path.join('model', 'yolo.onnx')       # YOLO模型文件路径
+siamese_file = os.path.join('model', 'siamese.onnx') # Siamese模型文件路径
+
+# Cookie 文件
+reporter_cookie_file = os.path.join('model', 'reporter.json')  # 举报账号cookie
+collector_cookie_file = os.path.join('model', 'collector.json') # 收集账号cookie
+
+# UID及名单文件
+uid_file = os.path.join('list', 'uid.txt')        # 待处理UID列表
+white_file = os.path.join('list', 'white.txt')    # 白名单UID
+black_file = os.path.join('list', 'black.txt')    # 黑名单UID
+keywords_file = os.path.join('list', 'keyword.txt') # 关键字列表
+
+# 记录目录
+true_dir = os.path.join("record", "true")    # 成功操作记录
+false_dir = os.path.join("record", "false")  # 失败操作记录
+report_dir = os.path.join("record", "report")# 举报日志目录
+
+# 浏览器路径与超时设置
+chrome_binary_path = os.path.join('list', 'chrome-win', 'chrome.exe')  # Chrome 可执行文件
+timeout_request = (3, 3)   # 请求超时时间 (连接, 读取)
+timeout_browser = 3000     # 浏览器操作超时 (毫秒)
+
+# 代理设置
+CLASH_API_URL = "http://127.0.0.1:9090"     # Clash API 地址
+CLASH_PROXY_URL = "127.0.0.1:7890"         # Clash 本地代理端口
+proxies = {
+    'http': "http://127.0.0.1:7890",
+    'https': "http://127.0.0.1:7890"
+}
+# Clash代理组名称
+group = '哔哩哔哩'
+
+# 单个UID最大举报次数
+limit = 10
+
+# 循环次数（可用于多轮操作）
+cycle = 2
+
+# User-Agent
+UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'
+
+# 视频分类及权重（用于举报tid随机选择）
 tids_with_weights = {
     '10030': 1,  # 色情低俗
     '10031': 1,  # 违规广告引流
@@ -29,6 +56,7 @@ tids_with_weights = {
     '10038': 1,  # 封面党、标题党
     '10039': 1,  # 其他
 }
+
 reasons = [
     # --- 1-10: 侧重于画面嵌入与视觉欺诈 ---
     "视频利用标题 title 伪装正常内容，实则在 duration 处通过抽帧方式闪现色情漫画入口，并教唆用户点赞转发；评论区则由机器人账号通过自动回复功能，大批量投送非法引流链接。",
@@ -78,9 +106,4 @@ reasons = [
     "该内容在 duration 处以领取奖品为名展示色情截图及外部平台，配合 title 骗取三连互动；机器人账号利用自动回复程序，在评论区构建了庞大的违规引流网络。",
     "视频在 duration 时段通过视觉引导用户关注角落的色情二维码，利用 title 的暗示诱导分享；自动回复系统在机器人刷屏的配合下，将流量转化为违规平台的活跃度。"
 ]
-group='哔哩哔哩'
-limit=10
-cycle=2
-
-
 
