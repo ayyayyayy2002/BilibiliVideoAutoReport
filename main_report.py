@@ -21,7 +21,7 @@ def report(page):
 
     cookies = storage.get("cookies", [])
     COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in cookies)
-    CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
+
 
     tids = list(tids_with_weights.keys())
     weights = list(tids_with_weights.values())
@@ -86,18 +86,12 @@ def report(page):
             file.write(f"动态视频个数:{dynamic}\n")
 
         # ------------------- 合集视频部分 -------------------
-        response = session.get(
-            f'https://api.bilibili.com/x/polymer/web-space/seasons_series_list?mid={uid}&page_size=20&page_num=1',
-            timeout=timeout_request, proxies=proxies
-        )
+        response = session.get(f'https://api.bilibili.com/x/polymer/web-space/seasons_series_list?mid={uid}&page_size=20&page_num=1',timeout=timeout_request, proxies=proxies)
         data = response.json()
         for season in data['data']['items_lists']['seasons_list']:
             seasons.append(season['meta']['season_id'])
         for season in seasons:
-            response = session.get(
-                f'https://api.bilibili.com/x/polymer/web-space/seasons_archives_list?mid={uid}&season_id={season}&sort_reverse=false&page_size=30&page_num=1',
-                timeout=timeout_request, proxies=proxies
-            )
+            response = session.get(f'https://api.bilibili.com/x/polymer/web-space/seasons_archives_list?mid={uid}&season_id={season}&sort_reverse=false&page_size=30&page_num=1',timeout=timeout_request, proxies=proxies)
             data = response.json()
             for archive in data['data']['archives']:
                 aids.append(archive['aid'])
@@ -111,10 +105,7 @@ def report(page):
             file.write(f"合集视频个数:{series}\n")
 
         # ------------------- 投稿视频部分 -------------------
-        response = session.get(
-            f'https://api.bilibili.com/x/series/recArchivesByKeywords?mid={uid}&keywords=&ps=0',
-            timeout=timeout_request, proxies=proxies
-        )
+        response = session.get(f'https://api.bilibili.com/x/series/recArchivesByKeywords?mid={uid}&keywords=&ps=0',timeout=timeout_request, proxies=proxies)
         data = response.json()
         for archive in data['data']['archives']:
             aids.append(archive['aid'])
@@ -131,15 +122,20 @@ def report(page):
         print(f'投稿视频个数:{count}')
         with open(aid_log_file, 'a', encoding='utf-8') as file:
             file.write(f"投稿视频个数:{count}\n")
-        # ------------------- 更新凭据 开始举报 -------------------
-
-
-        data = f'mid={uid}&reason=2,1,3&reason_v2=6&csrf={CSRF}'
+        # ------------------- 开始举报 -------------------
+        CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
+        data = {
+            'mid': uid,
+            'reason': '2,1,3',
+            'reason_v2': '6',
+            'csrf': CSRF
+        }
         response = session.post('https://space.bilibili.com/ajax/report/add', timeout=timeout_request, proxies=proxies, data=data)
         print(response.text)
 
 
         for aid, title, pic ,duration in items:
+            CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
             tid = random.choices(tids, weights=weights, k=1)[0]
             reason=random.choice(reasons)
             duration=random.randint(1, duration)
@@ -166,9 +162,7 @@ def report(page):
             while True:
                 try:
                     response = session.post(
-                        'https://api.bilibili.com/x/web-interface/appeal/v2/submit',
-                        data=data, timeout=timeout_request, proxies=proxies
-                    )
+                        'https://api.bilibili.com/x/web-interface/appeal/v2/submit',data=data, timeout=timeout_request, proxies=proxies)
                     break
                 except Exception as e:
                     print(e)
