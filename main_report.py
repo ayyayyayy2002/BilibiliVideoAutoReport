@@ -55,16 +55,16 @@ def report(page):
         aids, titles, pics,durations ,seasons= [], [], [],[],[]
         reportcount = 0
         # ------------------- 动态视频部分 -------------------
-        response = session.get(
-            f'https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?offset=&host_mid={uid}&timezone_offset=-480&platform=web&type=video&features=itemOpusStyle,listOnlyfans,opusBigCover',
-            timeout=timeout_request, proxies=proxies
-        )
+        response = session.get(f'https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?offset=&host_mid={uid}&timezone_offset=-480&platform=web&type=video&features=itemOpusStyle,listOnlyfans,opusBigCover',timeout=timeout_request, proxies=proxies)
         data = response.json()
         for item in data['data']['items']:
-            if item.get('type') != 'DYNAMIC_TYPE_AV':
-                continue  # 非动态视频跳过
             major = item.get('modules', {}).get('module_dynamic', {}).get('major', {})
             archive = major.get('archive')
+            if not archive:
+                continue
+            badge_text = archive.get('badge', {}).get('text')
+            if badge_text != '动态视频':
+                continue
             if archive:
                 aids.append(archive.get('aid'))
                 titles.append(archive.get('title'))
