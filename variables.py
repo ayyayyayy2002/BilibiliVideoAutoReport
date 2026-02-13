@@ -35,7 +35,7 @@ proxies = {
 group = '哔哩哔哩'
 
 # 单个UID最大举报次数
-limit = 10
+limit = 20
 
 # 循环次数（可用于多轮操作）
 cycle = 2
