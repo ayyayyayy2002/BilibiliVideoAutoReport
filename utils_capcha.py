@@ -91,10 +91,10 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
             time.sleep(0.5)
 
         try:
-            page.locator('.geetest_commit_tip').click(force=True)#提交验证码
+            page.locator('.geetest_commit_tip').click(timeout=0)#提交验证码
         except Exception:
             print("无法提交验证码,点击刷新")
-            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/div/a[2]').click(force=True)#点击刷新
+            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/div/a[2]').click(timeout=0)#点击刷新
             time.sleep(2)
             continue
         try:
