@@ -52,7 +52,7 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
 
 
     while True:
-        img_elem = page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
+        img_elem = page.wait_for_selector('.geetest_item_wrap', timeout=5000)
         f = img_elem.get_attribute('style')
         attempt = 0
         while 'url("' not in f and attempt < 20:
@@ -93,10 +93,10 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
             time.sleep(0.5)
 
         try:
-            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/a').click(timeout=0)#提交验证码
+            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/a').click(timeout=100)#提交验证码
         except Exception:
             print("无法提交验证码,点击刷新")
-            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/div/a[2]').click(timeout=timeout_browser)#点击刷新
+            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/div/a[2]').click(timeout=100)#点击刷新
             time.sleep(2)
             continue
         try:
