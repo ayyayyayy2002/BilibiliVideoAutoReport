@@ -175,17 +175,6 @@ def report(page):
 
             if "62009" in response.text or reportcount >= limit:
                 print(f'视频{reportcount:03}:{response.text}，{title}')
-
-                try:
-                    lines = open(uid_file, 'r', encoding='utf-8').readlines()
-                    with open(uid_file, 'w', encoding='utf-8') as f:
-                        for line in lines:
-                            if line.strip() != uid:
-                                f.write(line)
-                    print(f"删除UID: {uid}")
-                except Exception as e:
-                    return f"删除UID时发生错误: {e}"
-
                 break
             elif "-352" in response.text or "-351" in response.text:
                 print(f'视频{reportcount:03}:{response.text}\n{aid}{title}')
@@ -208,4 +197,15 @@ def report(page):
 
             with open(aid_log_file, 'a', encoding='utf-8') as file:
                 file.write(f'{enc(int(aid))},{tid}，{title}\n')
+
+        try:
+            lines = open(uid_file, 'r', encoding='utf-8').readlines()
+            with open(uid_file, 'w', encoding='utf-8') as f:
+                for line in lines:
+                    if line.strip() != uid:
+                        f.write(line)
+            print(f"删除UID: {uid}")
+        except Exception as e:
+            return f"删除UID时发生错误: {e}"
+
     return "0"
