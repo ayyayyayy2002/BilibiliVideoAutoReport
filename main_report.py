@@ -8,6 +8,7 @@ import requests
 import random
 import re
 import os
+from tqdm import tqdm
 from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, uid_file, limit, report_dir,tids_with_weights, timeout_request, reasons
 
 
@@ -46,7 +47,7 @@ def report(page):
         'cookie': COOKIE
     })
 
-    for uid in uids:
+    for uid in tqdm(uids):
         date = datetime.now().strftime('[%Y-%m-%d %H-%M-%S]')
         aid_log_file = os.path.join(report_dir, f'{date}{uid}.log')
         print(f"开始举报: https://space.bilibili.com/{uid} TIME: {date}")
