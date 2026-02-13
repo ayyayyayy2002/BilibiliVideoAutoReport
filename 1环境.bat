@@ -1,45 +1,45 @@
-ï»¿@echo off
+@echo off
 chcp 65001
 setlocal
 
-echo ===== ç¬¬ä¸€æ­¥ï¼šæ£€æŸ¥è™šæ‹ŸçŽ¯å¢ƒ =====
+echo ===== µÚÒ»²½£º¼ì²éÐéÄâ»·¾³ =====
 if exist .venv (
-    echo è™šæ‹ŸçŽ¯å¢ƒå·²å­˜åœ¨ï¼Œè·³è¿‡åˆ›å»ºæ­¥éª¤
+    echo ÐéÄâ»·¾³ÒÑ´æÔÚ£¬Ìø¹ý´´½¨²½Öè
 ) else (
-    echo æœªæ£€æµ‹åˆ°è™šæ‹ŸçŽ¯å¢ƒï¼Œæ­£åœ¨åˆ›å»º...
+    echo Î´¼ì²âµ½ÐéÄâ»·¾³£¬ÕýÔÚ´´½¨...
     python -m venv .venv
     if not exist .venv (
-        echo è™šæ‹ŸçŽ¯å¢ƒåˆ›å»ºå¤±è´¥
+        echo ÐéÄâ»·¾³´´½¨Ê§°Ü
         pause
         exit /b
     )
-    echo è™šæ‹ŸçŽ¯å¢ƒåˆ›å»ºå®Œæˆ
+    echo ÐéÄâ»·¾³´´½¨Íê³É
 )
 
 echo.
-echo ===== ç¬¬äºŒæ­¥ï¼šå‡çº§ pip =====
+echo ===== µÚ¶þ²½£ºÉý¼¶ pip =====
 .venv\Scripts\python.exe -m pip install --upgrade pip
 if errorlevel 1 (
-    echo pip å‡çº§å¤±è´¥ï¼Œå¯é‡æ–°è¿è¡Œæ­¤è„šæœ¬ç»§ç»­
+    echo pip Éý¼¶Ê§°Ü£¬¿ÉÖØÐÂÔËÐÐ´Ë½Å±¾¼ÌÐø
     pause
     exit /b
 )
 
 echo.
-echo ===== ç¬¬ä¸‰æ­¥ï¼šå®‰è£…ä¾èµ– =====
+echo ===== µÚÈý²½£º°²×°ÒÀÀµ =====
 if exist requirements.txt (
     .venv\Scripts\python.exe -m pip install -r requirements.txt
     if errorlevel 1 (
-        echo ä¾èµ–å®‰è£…å¤±è´¥ï¼Œå¯é‡æ–°è¿è¡Œæ­¤è„šæœ¬ç»§ç»­
+        echo ÒÀÀµ°²×°Ê§°Ü£¬¿ÉÖØÐÂÔËÐÐ´Ë½Å±¾¼ÌÐø
         pause
         exit /b
     )
-    echo ä¾èµ–å®‰è£…å®Œæˆ
+    echo ÒÀÀµ°²×°Íê³É
 ) else (
-    echo æœªæ‰¾åˆ° requirements.txtï¼Œè·³è¿‡ä¾èµ–å®‰è£…
+    echo Î´ÕÒµ½ requirements.txt£¬Ìø¹ýÒÀÀµ°²×°
 )
 
 echo.
-echo ===== æ‰€æœ‰æ­¥éª¤æ‰§è¡Œå®Œæˆ =====
+echo ===== ËùÓÐ²½ÖèÖ´ÐÐÍê³É =====
 pause
 endlocal
