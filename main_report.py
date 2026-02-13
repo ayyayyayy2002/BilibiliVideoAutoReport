@@ -52,9 +52,10 @@ def report(page):
         print(f"开始举报: https://space.bilibili.com/{uid} TIME: {date}")
         with open(aid_log_file, 'a', encoding='utf-8') as file:
             file.write(f"UID: {uid} TIME: {date}\n")
-        aids, titles, pics,durations ,seasons= [], [], [],[],[]
-        reportcount = 0
+        reports=[]
+
         # ------------------- 动态视频部分 -------------------
+        aids, titles, pics,durations ,seasons= [], [], [],[],[]
         response = session.get(f'https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?offset=&host_mid={uid}&timezone_offset=-480&platform=web&type=video&features=itemOpusStyle,listOnlyfans,opusBigCover',timeout=timeout_request, proxies=proxies)
         data = response.json()
         for item in data['data']['items']:
@@ -79,13 +80,15 @@ def report(page):
                     seconds = int(parts[0])
                 durations.append(seconds)
 
-
-        dynamic = len(aids)
-        print(f'动态视频个数:{dynamic}')
+        print(f'动态视频个数:{len(aids)}')
         with open(aid_log_file, 'a', encoding='utf-8') as file:
-            file.write(f"动态视频个数:{dynamic}\n")
+            file.write(f"动态视频个数:{len(aids)}\n")
+        items = list(zip(aids, titles, pics, durations))
+        random.shuffle(items)
+        reports.extend(items)
 
         # ------------------- 合集视频部分 -------------------
+        aids, titles, pics, durations, seasons = [], [], [], [], []
         response = session.get(f'https://api.bilibili.com/x/polymer/web-space/seasons_series_list?mid={uid}&page_size=20&page_num=1',timeout=timeout_request, proxies=proxies)
         data = response.json()
         for season in data['data']['items_lists']['seasons_list']:
@@ -99,12 +102,16 @@ def report(page):
                 pics.append(archive['pic'])
                 durations.append(archive['duration'])
 
-        series = len(aids)-dynamic
-        print(f'合集视频个数:{series}')
+
+        print(f'合集视频个数:{len(aids)}')
         with open(aid_log_file, 'a', encoding='utf-8') as file:
-            file.write(f"合集视频个数:{series}\n")
+            file.write(f"合集视频个数:{len(aids)}\n")
+        items = list(zip(aids, titles, pics, durations))
+        random.shuffle(items)
+        reports.extend(items)
 
         # ------------------- 投稿视频部分 -------------------
+        aids, titles, pics, durations, seasons = [], [], [], [], []
         response = session.get(f'https://api.bilibili.com/x/series/recArchivesByKeywords?mid={uid}&keywords=&ps=0',timeout=timeout_request, proxies=proxies)
         data = response.json()
         for archive in data['data']['archives']:
@@ -113,15 +120,12 @@ def report(page):
             pics.append(archive['pic'])
             durations.append(archive['duration'])
 
-        items = list(zip(aids, titles, pics, durations))
-        if dynamic==series==0:
-            random.shuffle(items)
-
-
-        count=len(aids)-dynamic-series
-        print(f'投稿视频个数:{count}')
+        print(f'投稿视频个数:{len(aids)}')
         with open(aid_log_file, 'a', encoding='utf-8') as file:
-            file.write(f"投稿视频个数:{count}\n")
+            file.write(f"投稿视频个数:{len(aids)}\n")
+        items = list(zip(aids, titles, pics, durations))
+        random.shuffle(items)
+        reports.extend(items)
         # ------------------- 开始举报 -------------------
         CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
         data = {
@@ -132,9 +136,10 @@ def report(page):
         }
         response = session.post('https://space.bilibili.com/ajax/report/add', timeout=timeout_request, proxies=proxies, data=data)
         print(response.text)
+        reportcount = 0
 
 
-        for aid, title, pic ,duration in items:
+        for aid, title, pic ,duration in reports:
             CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
             tid = random.choices(tids, weights=weights, k=1)[0]
             reason=random.choice(reasons)
