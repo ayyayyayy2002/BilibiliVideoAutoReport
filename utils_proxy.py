@@ -8,7 +8,6 @@ def switch_proxy():
 
     # 获取 GLOBAL 策略组信息
     group_url = f"{CLASH_API_URL}/proxies/{group}"
-    print(group_url)
     response = requests.get(group_url)
     data = response.json()
 
@@ -16,7 +15,7 @@ def switch_proxy():
     current_proxy = data.get("now")
 
     print("当前代理:", current_proxy)
-    #print("所有可选代理:", proxies)
+
 
 
 
