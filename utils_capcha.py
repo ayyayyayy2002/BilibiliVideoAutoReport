@@ -46,14 +46,16 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
             break
         except Exception as e:
             print("验证码元素未出现",e)
-            break
+            context = page.context
+            context.storage_state(path=reporter_cookie_file)
+            return
 
 
     while True:
         img_elem = page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
         f = img_elem.get_attribute('style')
         attempt = 0
-        while 'url("' not in f and attempt < 10:
+        while 'url("' not in f and attempt < 20:
             f = img_elem.get_attribute('style')
             attempt += 1
             time.sleep(0.5)
@@ -91,7 +93,7 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
             time.sleep(0.5)
 
         try:
-            page.locator('.geetest_commit_tip').click(timeout=1)#提交验证码
+            page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/a').click(timeout=0)#提交验证码
         except Exception:
             print("无法提交验证码,点击刷新")
             page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/div/a[2]').click(timeout=timeout_browser)#点击刷新
