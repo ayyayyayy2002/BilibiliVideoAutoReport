@@ -11,7 +11,7 @@ from ml_yolo import run_yolo
 from utils_accuracy import calc_accuracy
 from utils_capcha import crop_detections
 from utils_chrome import start_chrome
-from variables import yolo_file, siamese_file, false_dir, true_dir, timeout_browser, timeout_request
+from variables import yolo_file, siamese_file, false_dir, true_dir, timeout_browser, timeout_request, CLASH_PROXY_URL
 
 
 def benchmark():
@@ -19,7 +19,7 @@ def benchmark():
     SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS = load_siamese(siamese_file)
 
     # Playwright 启动干净浏览器
-    playwright, browser, context, page = start_chrome(headless=False, proxy_url=None)
+    playwright, browser, context, page = start_chrome(headless=True, proxy_url=CLASH_PROXY_URL)
 
     while True:
         try:
