@@ -21,7 +21,11 @@ def report(page):
         storage = json.load(f)
 
     cookies = storage.get("cookies", [])
-    COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in cookies)
+    # 只保留 domain 包含 .bilibili.com 的 cookie
+    filtered = [c for c in cookies if ".bilibili.com" in c.get("domain", "")]
+    COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
+
+    print(COOKIE)
 
 
     tids = list(tids_with_weights.keys())
@@ -185,7 +189,10 @@ def report(page):
                     storage = json.load(f)
 
                 cookies = storage.get("cookies", [])
-                COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in cookies)
+                # 只保留 domain 包含 .bilibili.com 的 cookie
+                filtered = [c for c in cookies if ".bilibili.com" in c.get("domain", "")]
+                COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
+
                 session.headers.update({
                     'user-agent': UA,
                     'cookie': COOKIE
