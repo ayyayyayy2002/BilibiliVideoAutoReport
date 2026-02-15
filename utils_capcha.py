@@ -32,19 +32,19 @@ def crop_detections(img, classA, classB):
 
 def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
     while True:
-        # try:
-        url = f"https://www.bilibili.com/appeal/?avid={aid}"
-        page.goto(url, wait_until="domcontentloaded")
-        page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div/div/div[2]').click(timeout=timeout_browser)
-        page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/label/div[2]/textarea').fill('视频封面标题以及内容违规')
-        page.locator('xpath=/html/body/div/div[3]/div[2]').click(timeout=timeout_browser)
-        page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
-        break
-        # except Exception as e:
-        #     print("验证码元素未出现",e)
-        #     context = page.context
-        #     context.storage_state(path=reporter_cookie_file)
-        #     return
+         try:
+            url = f"https://www.bilibili.com/appeal/?avid={aid}"
+            page.goto(url, wait_until="domcontentloaded")
+            page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div/div/div[2]').click(timeout=timeout_browser)
+            page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/label/div[2]/textarea').fill('视频封面标题以及内容违规')
+            page.locator('xpath=/html/body/div/div[3]/div[2]').click(timeout=timeout_browser)
+            page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
+            break
+         except Exception as e:
+             print("验证码元素未出现",e)
+             context = page.context
+             context.storage_state(path=reporter_cookie_file)
+             return
 
 
     while True:
