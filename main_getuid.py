@@ -20,12 +20,16 @@ def getuid():
     with open(reporter_cookie_file, "r", encoding="utf-8") as f:
         storage = json.load(f)
     cookies = storage.get("cookies", [])
-    reporter_cookie = "; ".join(f"{c['name']}={c['value']}" for c in cookies)
+    # 只保留 domain 包含 .bilibili.com 的 cookie
+    filtered = [c for c in cookies if ".bilibili.com" in c.get("domain", "")]
+    reporter_cookie = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
     reporter_csrf = re.search(r'bili_jct=([^;]*)', reporter_cookie).group(1)
     with open(collector_cookie_file, "r", encoding="utf-8") as f:
         storage = json.load(f)
     cookies = storage.get("cookies", [])
-    collector_cookie = "; ".join(f"{c['name']}={c['value']}" for c in cookies)
+    # 只保留 domain 包含 .bilibili.com 的 cookie
+    filtered = [c for c in cookies if ".bilibili.com" in c.get("domain", "")]
+    collector_cookie = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
     collector_csrf = re.search(r'bili_jct=([^;]*)', collector_cookie).group(1)
     # ------------------ 获取列表 ------------------
     print('稍后再看：举报账号')
