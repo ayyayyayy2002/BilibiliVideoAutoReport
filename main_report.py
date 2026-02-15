@@ -181,7 +181,7 @@ def report(page):
             if "62009" in response.text or reportcount >= limit:
                 print(f'视频{reportcount:03}:{response.text}，{title}')
                 break
-            elif "-352" in response.text or "-351" in response.text:
+            elif "-352" in response.text:
                 print(f'视频{reportcount:03}:{response.text}\n{aid}{title}')
                 capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS,
                        SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
@@ -200,6 +200,9 @@ def report(page):
             elif "412" in response.text:
                 print('报错412，切换代理')
                 switch_proxy()
+            elif   "-351" in response.text:
+                print("疑似cookie生效,请重新登录")
+                exit(1)
             else:
                 print(f'视频{reportcount:03}:{response.text}\nhttps://www.bilibili.com/video/av{aid}\n{title}\n')
 
