@@ -25,9 +25,6 @@ def report(page):
     filtered = [c for c in cookies if ".bilibili.com" in c.get("domain", "")]
     COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
 
-    print(COOKIE)
-
-
     tids = list(tids_with_weights.keys())
     weights = list(tids_with_weights.values())
 
