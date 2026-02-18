@@ -1,7 +1,5 @@
 import os
-
 from tqdm import tqdm
-
 from utils_chrome import start_chrome
 from variables import uid_file, reporter_cookie_file, CLASH_PROXY_URL
 
