@@ -13,6 +13,7 @@ uid_file = os.path.join('list', 'uid.txt')        # 待处理UID列表
 white_file = os.path.join('list', 'white.txt')    # 白名单UID
 black_file = os.path.join('list', 'black.txt')    # 黑名单UID
 keywords_file = os.path.join('list', 'keyword.txt') # 关键字列表
+uid_sql = os.path.join('list', 'uid.sqlite3')    # 黑名单SQL
 
 # 记录目录
 true_dir = os.path.join("record", "true")    # 成功操作记录
