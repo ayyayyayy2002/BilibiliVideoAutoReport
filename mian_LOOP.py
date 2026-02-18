@@ -18,7 +18,7 @@ def LOOP(page):
 
                 result = getuid()
                 if result =="0":
-                    if count >= cycle:
+                    if count >= cycle != 0:
                         print("已达到最大循环次数,终止")
                         return
                     break
