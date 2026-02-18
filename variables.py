@@ -36,10 +36,10 @@ proxies = {
 group = '哔哩哔哩'
 
 # 单个UID最大举报次数
-limit = 20
+limit = 50
 
 # 循环次数（可用于多轮操作）
-cycle = 2
+cycle = 0
 
 # User-Agent
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'
