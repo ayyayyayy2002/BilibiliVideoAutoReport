@@ -91,6 +91,14 @@ def getuid():
                     break
             print(f"搜索结果：{mids}")
 
+    try:
+        with open("list/extra.txt", "r", encoding="utf-8") as f:
+            for line in f:
+                lists.add(line.strip())
+    except Exception:
+        pass
+
+
     sorted_lists = sorted(lists, key=int)
     with open(uid_file, 'w', encoding='utf-8') as f:
         for uid in sorted_lists:
