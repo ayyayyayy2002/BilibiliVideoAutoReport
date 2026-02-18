@@ -6,6 +6,7 @@ from main_getuid import getuid
 from main_label import label
 from main_report import report
 from main_setup import setup
+from main_uidsql import uidsql
 from mian_LOOP import LOOP
 from mian_cut import cut
 from utils_chrome import start_chrome
@@ -24,6 +25,7 @@ def main():
     print("6. 模型测试 benchmark()")
     print("7. 图片标记 label()")
     print("8. 图片裁切 cut()")
+    print("9. 用户信息 uidsql()")
 
     choice = input("请输入：")
 
@@ -44,6 +46,8 @@ def main():
         label()
     elif choice == "8":
         cut()
+    elif choice == "9":
+        uidsql()
     else:
         _, _,_, page = start_chrome(headless=True, proxy_url=CLASH_PROXY_URL, storage_state=reporter_cookie_file,user_agent=UA)
         LOOP(page)
