@@ -9,7 +9,8 @@ import random
 import re
 import os
 from tqdm import tqdm
-from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, uid_file, limit, report_dir,tids_with_weights, timeout_request, reasons
+from variables import yolo_file, siamese_file, reporter_cookie_file, proxies, UA, uid_file, limit, report_dir, \
+    tids_with_weights, timeout_request, reasons, skip
 
 
 def report(page):
@@ -175,7 +176,7 @@ def report(page):
                     print(e)
                     switch_proxy()
 
-            if "62009" in response.text or reportcount >= limit:
+            if "62009" in response.text and skip ==True or reportcount >= limit:
                 print(f'视频{reportcount:03}:{response.text}，{title}')
                 break
             elif "-352" in response.text:
