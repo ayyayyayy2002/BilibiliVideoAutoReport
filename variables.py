@@ -37,6 +37,7 @@ group = '哔哩哔哩'
 
 # 单个UID最大举报次数
 limit = 50
+skip=True
 
 # 循环次数（可用于多轮操作）
 cycle = 0
