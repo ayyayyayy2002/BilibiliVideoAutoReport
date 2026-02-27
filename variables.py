@@ -36,11 +36,11 @@ proxies = {
 group = '哔哩哔哩'
 
 # 单个UID最大举报次数
-limit = 50
+limit = 500
 skip=True
 
 # 循环次数（可用于多轮操作）
-cycle = 0
+cycle = 3
 
 # User-Agent
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'
@@ -48,7 +48,7 @@ UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like 
 # 视频分类及权重（用于举报tid随机选择）
 tids_with_weights = {
     '10030': 1,  # 色情低俗
-    '10031': 1,  # 违规广告引流
+    '10031': 10,  # 违规广告引流
     '10032': 10,  # 涉政敏感
     '10033': 10,  # 引战、网暴、不友善
     '10034': 1,  # 传播谣言
