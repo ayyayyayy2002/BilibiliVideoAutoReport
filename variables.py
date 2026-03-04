@@ -40,7 +40,7 @@ limit = 20
 #举报账号个数
 accountcount=3
 #已举报提示后是否跳过该目标
-skip=False
+skip=True
 #验证码记录 举报记录开关
 log=False
 # 循环次数（可用于多轮操作）
