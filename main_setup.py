@@ -6,6 +6,7 @@ from variables import collector_cookie_file, CLASH_PROXY_URL, accountcount, UA
 
 
 def setup():
+    names=set()
     # ------------------- Collector 登录 -------------------
     print("登录Collector")
     storage_state = collector_cookie_file if os.path.exists(collector_cookie_file) else None
@@ -50,7 +51,13 @@ def setup():
 
         page.wait_for_selector(".nickname", timeout=300000)
         nickname = page.query_selector(".nickname").inner_text()
+        if nickname in names:
+            print("存在相同账号,拒绝运行")
+            exit(1)
+        names.add(nickname)
         print(f"Reporter{i}已登录，昵称:", nickname)
+
+
 
         # 保存最新状态
         context.storage_state(path=os.path.join('model', f'reporter{i}.json') )
