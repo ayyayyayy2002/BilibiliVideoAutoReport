@@ -1,0 +1,8 @@
+/.idea/
+*.pyc
+*.jpg
+*.pkl
+*.json
+*.log
+/list/chrome-win
+*.txt
