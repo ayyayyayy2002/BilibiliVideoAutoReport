@@ -1,7 +1,9 @@
 import os
 from tqdm import tqdm
-from utils_chrome import start_chrome
-from variables import uid_file, CLASH_PROXY_URL
+
+from utils_chrome import start_browser
+#from utils_chrome import start_chrome
+from variables import uid_file, CLASH_PROXY_URL, UA
 
 
 def checkuid():
@@ -23,7 +25,14 @@ def checkuid():
 
     # 使用 Playwright 启动浏览器
     storage_state = os.path.join('model', f'reporter0.json')  if os.path.exists(os.path.join('model', f'reporter0.json') ) else None
-    playwright, browser, context, page = start_chrome(headless=False, storage_state=storage_state,proxy_url=CLASH_PROXY_URL)
+    playwright, browser= start_browser(headless=False, proxy_url=CLASH_PROXY_URL)
+    context_options = {
+        "user_agent": UA,
+        "storage_state": storage_state
+    }
+    context = browser.new_context(**context_options)
+    page = context.new_page()
+    page.set_viewport_size({"width": 1000, "height": 700})
 
     try:
         for uid in tqdm(uids):
