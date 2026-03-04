@@ -10,8 +10,9 @@ from ml_siamese import run_siamese
 from ml_yolo import run_yolo
 from utils_accuracy import calc_accuracy
 from utils_capcha import crop_detections
-from utils_chrome import start_chrome
-from variables import yolo_file, siamese_file, false_dir, true_dir, timeout_browser, timeout_request, CLASH_PROXY_URL
+from utils_chrome import start_browser
+from variables import yolo_file, siamese_file, false_dir, true_dir, timeout_browser, timeout_request, CLASH_PROXY_URL, \
+    UA
 
 
 def benchmark():
@@ -19,7 +20,13 @@ def benchmark():
     SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS = load_siamese(siamese_file)
 
     # Playwright 启动干净浏览器
-    playwright, browser, context, page = start_chrome(headless=True, proxy_url=CLASH_PROXY_URL)
+    playwright, browser= start_browser(headless=True, proxy_url=CLASH_PROXY_URL)
+    context_options = {
+        "user_agent": UA,
+    }
+    context = browser.new_context(**context_options)
+    page = context.new_page()
+    page.set_viewport_size({"width": 1000, "height": 700})
 
     while True:
         try:
