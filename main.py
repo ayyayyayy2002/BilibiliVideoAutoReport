@@ -6,11 +6,10 @@ from main_getuid import getuid
 from main_label import label
 from main_report import report
 from main_setup import setup
-from main_uidsql import uidsql
 from mian_LOOP import LOOP
 from mian_cut import cut
 from utils_chrome import start_chrome
-from variables import reporter_cookie_file, CLASH_PROXY_URL, UA
+from variables import CLASH_PROXY_URL, UA, accountcount
 
 
 def main():
@@ -25,7 +24,6 @@ def main():
     print("6. 模型测试 benchmark()")
     print("7. 图片标记 label()")
     print("8. 图片裁切 cut()")
-    print("9. 用户信息 uidsql()")
 
     choice = input("请输入：")
 
@@ -36,9 +34,10 @@ def main():
     elif choice == "3":
         getuid()
     elif choice == "4":
+        pages = []
         _, _,_, page = start_chrome(headless=False, proxy_url=CLASH_PROXY_URL, storage_state=reporter_cookie_file,user_agent=UA)
-
-        report(page)
+        pages.append(page)
+        report(pages)
     elif choice == "5":
         checkuid()
     elif choice == "6":
@@ -47,11 +46,19 @@ def main():
         label()
     elif choice == "8":
         cut()
-    elif choice == "9":
-        uidsql()
     else:
+        pages = []
+        for i in range(0, accountcount):
+            _, _, _, page = start_chrome(
+                headless=False,
+                proxy_url=CLASH_PROXY_URL,
+                storage_state=os.path.join('model', f'reporter{i}.json'),
+                user_agent=UA
+            )
+            pages.append(page)
+        report(pages)
         _, _,_, page = start_chrome(headless=True, proxy_url=CLASH_PROXY_URL, storage_state=reporter_cookie_file,user_agent=UA)
-        LOOP(page)
+        LOOP(pages)
     main()
 
 
