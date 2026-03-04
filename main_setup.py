@@ -35,7 +35,7 @@ def setup():
     playwright.stop()
     # ------------------- Reporter 登录 -------------------
     for i in range(0, accountcount):
-        print(f"登录Reporter{i+1}")
+        print(f"登录Reporter{i}")
         # 如果文件存在就传入 storage_state，否则为 None
         storage_state = os.path.join('model', f'reporter{i}.json')  if os.path.exists(os.path.join('model', f'reporter{i}.json') ) else None
         playwright, browser= start_browser(headless=False,proxy_url=CLASH_PROXY_URL)
