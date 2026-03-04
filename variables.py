@@ -1,5 +1,6 @@
 import os
 
+
 # 模型路径
 yolo_file = os.path.join('model', 'yolo.onnx')       # YOLO模型文件路径
 siamese_file = os.path.join('model', 'siamese.onnx') # Siamese模型文件路径
@@ -12,7 +13,7 @@ uid_file = os.path.join('list', 'uid.txt')        # 待处理UID列表
 white_file = os.path.join('list', 'white.txt')    # 白名单UID
 black_file = os.path.join('list', 'black.txt')    # 黑名单UID
 keywords_file = os.path.join('list', 'keyword.txt') # 关键字列表
-uid_sql = os.path.join('list', 'uid.sqlite3')    # 黑名单SQL
+
 
 # 记录目录
 true_dir = os.path.join("record", "true")    # 成功操作记录
@@ -40,9 +41,10 @@ limit = 500
 accountcount=3
 #已举报提示后是否跳过该目标
 skip=False
-
+#验证码记录 举报记录开关
+log=False
 # 循环次数（可用于多轮操作）
-cycle = 3
+cycle = 2
 
 # User-Agent
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'
