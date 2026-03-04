@@ -36,7 +36,7 @@ proxies = {
 group = '哔哩哔哩'
 
 # 单个UID最大举报次数
-limit = 500
+limit = 20
 #举报账号个数
 accountcount=3
 #已举报提示后是否跳过该目标
