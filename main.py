@@ -1,5 +1,4 @@
 import os
-
 from main_benchmark import benchmark
 from main_checkuid import checkuid
 from main_getuid import getuid
@@ -8,7 +7,7 @@ from main_report import report
 from main_setup import setup
 from mian_LOOP import LOOP
 from mian_cut import cut
-from utils_chrome import start_chrome
+from utils_chrome import start_browser
 from variables import CLASH_PROXY_URL, UA, accountcount
 
 
@@ -35,31 +34,38 @@ def main():
         getuid()
     elif choice == "4":
         pages = []
-        _, _,_, page = start_chrome(headless=False, proxy_url=CLASH_PROXY_URL, storage_state=reporter_cookie_file,user_agent=UA)
+        playwright, browser = start_browser(headless=False, proxy_url=CLASH_PROXY_URL)
+        context_options = {
+            "user_agent":UA,
+            "storage_state":os.path.join('model', f'reporter0.json')
+        }
+        context = browser.new_context(**context_options)
+        page = context.new_page()
+        page.set_viewport_size({"width": 1000, "height": 700})
         pages.append(page)
         report(pages)
     elif choice == "5":
         checkuid()
     elif choice == "6":
-        benchmark()
+         benchmark()
     elif choice == "7":
         label()
     elif choice == "8":
         cut()
     else:
         pages = []
+        playwright, browser = start_browser(headless=True, proxy_url=CLASH_PROXY_URL)
         for i in range(0, accountcount):
-            _, _, _, page = start_chrome(
-                headless=False,
-                proxy_url=CLASH_PROXY_URL,
-                storage_state=os.path.join('model', f'reporter{i}.json'),
-                user_agent=UA
-            )
+            context_options = {
+                "user_agent": UA,
+                "storage_state": os.path.join('model', f'reporter{i}.json')
+            }
+            context = browser.new_context(**context_options)
+            page = context.new_page()
+            page.set_viewport_size({"width": 1000, "height": 700})
             pages.append(page)
-        report(pages)
-        _, _,_, page = start_chrome(headless=True, proxy_url=CLASH_PROXY_URL, storage_state=reporter_cookie_file,user_agent=UA)
         LOOP(pages)
-    main()
+        main()
 
 
 if __name__ == "__main__":
