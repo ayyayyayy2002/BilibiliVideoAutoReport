@@ -65,7 +65,7 @@ def main():
             page.set_viewport_size({"width": 1000, "height": 700})
             pages.append(page)
         LOOP(pages)
-        main()
+    main()
 
 
 if __name__ == "__main__":
