@@ -4,7 +4,7 @@ from utils_proxy import switch_proxy
 from variables import cycle
 
 
-def LOOP(page):
+def LOOP(pages):
     count=0
 
 
@@ -27,7 +27,7 @@ def LOOP(page):
                 switch_proxy()
         while True:
             try:
-                result = report(page)
+                result = report(pages)
                 print(result)
                 if result == "0" :
                     count+=1
