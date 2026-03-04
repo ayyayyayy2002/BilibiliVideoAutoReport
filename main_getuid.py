@@ -3,7 +3,7 @@ import requests
 import re
 import os
 
-from variables import uid_file, black_file, white_file, keywords_file, UA, reporter_cookie_file, collector_cookie_file,timeout_request,proxies
+from variables import uid_file, black_file, white_file, keywords_file, UA, collector_cookie_file,timeout_request,proxies
 
 
 def getuid():
@@ -17,7 +17,7 @@ def getuid():
         print(f"文件 {uid_file} 不存在，无需删除。")
 
     # ------------------ 获取Cookie ------------------
-    with open(reporter_cookie_file, "r", encoding="utf-8") as f:
+    with open(os.path.join('model', f'reporter0.json') , "r", encoding="utf-8") as f:
         storage = json.load(f)
     cookies = storage.get("cookies", [])
     # 只保留 domain 包含 .bilibili.com 的 cookie
