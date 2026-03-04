@@ -169,10 +169,12 @@ def report(pages):
                         switch_proxy()
 
                 if "62009" in response.text and skip == True or reportcount >= limit:
-                    print(f'账号{i}, 视频{reportcount:03}:{response.text}，{title}')
+                    print(
+                        f'账号{i}, 视频{reportcount:03}:{response.text}\nhttps://www.bilibili.com/video/av{aid}\n{title}\n')
                     break
                 elif "-352" in response.text:
-                    print(f'账号{i}, 视频{reportcount:03}:{response.text},{title}')
+                    print(
+                        f'账号{i}, 视频{reportcount:03}:{response.text}\nhttps://www.bilibili.com/video/av{aid}\n{title}\n')
                     capcha(
                         aid, pages[i],
                         i,
