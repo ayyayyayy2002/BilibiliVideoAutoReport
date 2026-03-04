@@ -9,7 +9,7 @@ import re
 import os
 from utils_accuracy import calc_accuracy
 from utils_proxy import switch_proxy
-from variables import reporter_cookie_file, false_dir, true_dir, timeout_request, timeout_browser
+from variables import false_dir, true_dir, timeout_request, timeout_browser, log
 
 
 def crop_detections(img, classA, classB):
@@ -31,7 +31,7 @@ def crop_detections(img, classA, classB):
     return cropped_A, cropped_B
 
 
-def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
+def capcha(aid, page,i, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
     while True:
          try:
             url = f"https://www.bilibili.com/appeal/?avid={aid}"
@@ -105,23 +105,26 @@ def capcha(aid, page, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAM
         try:
             page.wait_for_selector('.geetest_item_wrap', state='hidden', timeout=timeout_browser)
             print("验证码正确")
-            fname = os.path.basename(urlparse(unquote(url)).path)
-            true_path = os.path.join(true_dir, fname)
-            with open(true_path, 'wb') as fp:
-                fp.write(content)
             time.sleep(2)
-            calc_accuracy()
+            if log:
+                fname = os.path.basename(urlparse(unquote(url)).path)
+                true_path = os.path.join(true_dir, fname)
+                with open(true_path, 'wb') as fp:
+                    fp.write(content)
+                calc_accuracy()
             break
         except Exception as e:
             print('验证码错误',e)
-            fname = os.path.basename(urlparse(unquote(url)).path)
-            false_path = os.path.join(false_dir, fname)
-            with open(false_path, 'wb') as fp:
-                fp.write(content)
+            if log:
+                fname = os.path.basename(urlparse(unquote(url)).path)
+                false_path = os.path.join(false_dir, fname)
+                with open(false_path, 'wb') as fp:
+                    fp.write(content)
+                calc_accuracy()
 
 
 
 
     context = page.context
-    context.storage_state(path=reporter_cookie_file)
+    context.storage_state(path=os.path.join('model', f'reporter{i}.json') )
     return
