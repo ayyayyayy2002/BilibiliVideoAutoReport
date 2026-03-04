@@ -4,8 +4,7 @@ import os
 yolo_file = os.path.join('model', 'yolo.onnx')       # YOLO模型文件路径
 siamese_file = os.path.join('model', 'siamese.onnx') # Siamese模型文件路径
 
-# Cookie 文件
-reporter_cookie_file = os.path.join('model', 'reporter.json')  # 举报账号cookie
+
 collector_cookie_file = os.path.join('model', 'collector.json') # 收集账号cookie
 
 # UID及名单文件
@@ -37,6 +36,9 @@ group = '哔哩哔哩'
 
 # 单个UID最大举报次数
 limit = 500
+#举报账号个数
+accountcount=3
+#已举报提示后是否跳过该目标
 skip=False
 
 # 循环次数（可用于多轮操作）
