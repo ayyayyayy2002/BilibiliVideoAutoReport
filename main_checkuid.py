@@ -48,4 +48,4 @@ def checkuid():
         browser.close()
         playwright.stop()
 
-    return "0"
+    return 0
