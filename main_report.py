@@ -8,8 +8,7 @@ import random
 import re
 import os
 from tqdm import tqdm
-from variables import yolo_file, siamese_file, proxies, UA, uid_file, limit, report_dir, \
-    tids_with_weights, timeout_request, reasons, skip, accountcount
+from variables import yolo_file, siamese_file, proxies, UA, uid_file, limit, tids_with_weights, timeout_request, reasons, skip, accountcount
 
 
 def report(pages):
