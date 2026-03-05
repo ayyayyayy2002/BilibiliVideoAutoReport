@@ -35,7 +35,7 @@ def capcha(aid, page,i, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SI
     while True:
          try:
             url = f"https://www.bilibili.com/appeal/?avid={aid}"
-            page.goto(url, wait_until="domcontentloaded")
+            page.goto(url,wait_until="domcontentloaded",timeout=timeout_browser)
             page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div/div/div[2]').click(timeout=timeout_browser)
             page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/label/div[2]/textarea').fill('视频封面标题以及内容违规')
             page.locator('xpath=/html/body/div/div[3]/div[2]').click(timeout=timeout_browser)
