@@ -1,16 +1,14 @@
 import os
 from tqdm import tqdm
-
 from utils_chrome import start_browser
-#from utils_chrome import start_chrome
-from variables import uid_file, CLASH_PROXY_URL, UA
+from variables import uid_file, CLASH_PROXY_URL, UA, black_file
 
 
 def checkuid():
     uids = []
 
     try:
-        with open(uid_file, 'r', encoding='utf-8') as file:
+        with open(black_file, 'r', encoding='utf-8') as file:
             for line in file:
                 line = line.strip()
                 if line.isdigit():
@@ -43,17 +41,7 @@ def checkuid():
             print("请按回车继续...")
             input()  # 等待用户操作
 
-            # 删除已经处理的 UID
-            try:
-                with open(uid_file, 'r', encoding='utf-8') as f:
-                    lines = f.readlines()
-                with open(uid_file, 'w', encoding='utf-8') as f:
-                    for line in lines:
-                        if line.strip() != uid:
-                            f.write(line)
-                print(f"删除UID: {uid}")
-            except Exception as e:
-                print(f"删除UID时发生错误: {e}")
+
     finally:
         # 关闭 Playwright 浏览器
         context.close()
