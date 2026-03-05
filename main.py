@@ -35,14 +35,15 @@ def main():
     elif choice == "4":
         pages = []
         playwright, browser = start_browser(headless=False, proxy_url=CLASH_PROXY_URL)
-        context_options = {
-            "user_agent":UA,
-            "storage_state":os.path.join('model', f'reporter0.json')
-        }
-        context = browser.new_context(**context_options)
-        page = context.new_page()
-        page.set_viewport_size({"width": 1000, "height": 700})
-        pages.append(page)
+        for i in range(0, accountcount):
+            context_options = {
+                "user_agent": UA,
+                "storage_state": os.path.join('model', f'reporter{i}.json')
+            }
+            context = browser.new_context(**context_options)
+            page = context.new_page()
+            page.set_viewport_size({"width": 1000, "height": 700})
+            pages.append(page)
         report(pages)
     elif choice == "5":
         checkuid()
