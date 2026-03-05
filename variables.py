@@ -18,7 +18,6 @@ keywords_file = os.path.join('list', 'keyword.txt') # 关键字列表
 # 记录目录
 true_dir = os.path.join("record", "true")    # 成功操作记录
 false_dir = os.path.join("record", "false")  # 失败操作记录
-report_dir = os.path.join("record", "report")# 举报日志目录
 
 # 浏览器路径与超时设置
 chrome_binary_path = os.path.join('list', 'chrome-win', 'chrome.exe')  # Chrome 可执行文件
