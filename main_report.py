@@ -167,7 +167,7 @@ def report(pages):
                         print(e)
                         switch_proxy()
 
-                if "62009" in response.text and skip == True or reportcount >= limit:
+                if "重复" in response.text and skip or reportcount >= limit:
                     print(
                         f'账号{i}, 视频{reportcount:03}:{response.text}\nhttps://www.bilibili.com/video/av{aid}\n{title}\n')
                     break
