@@ -1,4 +1,5 @@
 from urllib.parse import urlparse, unquote
+import variables
 from ml_siamese import run_siamese
 from ml_yolo import run_yolo
 import requests
@@ -8,10 +9,6 @@ import cv2
 import re
 import os
 from utils_accuracy import calc_accuracy
-from utils_proxy import switch_proxy
-from variables import false_dir, true_dir, timeout_request, timeout_browser, log
-
-
 def crop_detections(img, classA, classB):
     cropped_A = []
     for d in classA:
@@ -31,45 +28,30 @@ def crop_detections(img, classA, classB):
     return cropped_A, cropped_B
 
 
-def capcha(aid, page,i, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
+def capcha(page,i):
     while True:
-         try:
-            url = f"https://www.bilibili.com/appeal/?avid={aid}"
-            page.goto(url,wait_until="domcontentloaded",timeout=timeout_browser)
-            page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div/div/div[2]').click(timeout=timeout_browser)
-            page.locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/label/div[2]/textarea').fill('视频封面标题以及内容违规')
-            page.locator('xpath=/html/body/div/div[3]/div[2]').click(timeout=timeout_browser)
-            page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
-            break
-         except Exception as e:
-             print("验证码元素未出现",e)
-             switch_proxy()
-             time.sleep(3)
-
-
-    while True:
-        wrap = page.wait_for_selector('.geetest_item_wrap', timeout=timeout_browser)
+        wrap = page.wait_for_selector('.geetest_item_wrap', timeout=variables.timeout.browser)
         page.wait_for_function(
             """el => {
                 const bg = window.getComputedStyle(el).backgroundImage;
                 return bg && bg.includes('url');
             }""",
             arg=wrap,
-            timeout=timeout_browser
+            timeout=variables.timeout.browser
         )
         style = wrap.evaluate(
             "el => window.getComputedStyle(el).backgroundImage"
         )
         url = re.search(r'url\(["\']?(.*?)["\']?\)', style).group(1)
-        content = requests.get(url, timeout=timeout_request, proxies=None).content
+        content = requests.get(url, timeout=variables.timeout.request, proxies=None).content
 
         nparr = numpy.frombuffer(content, numpy.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-        classA, classB = run_yolo(img, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS)
+        classA, classB = run_yolo(img)
         cropped_A, cropped_B = crop_detections(img, classA, classB)
-        results_2d = run_siamese(cropped_A, cropped_B, SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS)
+        results_2d = run_siamese(cropped_A, cropped_B)
 
         selected = []
         available_B = classB.copy()  # 剩余可选 B
@@ -98,33 +80,26 @@ def capcha(aid, page,i, YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS, SIAMESE_MODEL, SI
             x_offset = (x_model / orig_size) * elem_size - elem_size / 2
             y_offset = (y_model / orig_size) * elem_size - elem_size / 2
             print(f"点击偏移量: ({x_offset:.1f}, {y_offset:.1f})")
-            page.mouse.click(img_box['x'] + elem_size / 2 + x_offset,
-                             img_box['y'] + elem_size / 2 + y_offset)
+            page.mouse.click(img_box['x'] + elem_size / 2 + x_offset,img_box['y'] + elem_size / 2 + y_offset)
             time.sleep(0.5)
-        page.locator('xpath=/html/body/div[2]/div[2]/div[6]/div/div/div[3]/a').click(timeout=timeout_browser)#提交验证码
+        page.locator('div.geetest_commit_tip', has_text="确认").click(timeout=variables.timeout.browser)#提交验证码
         try:
-            page.wait_for_selector('.geetest_item_wrap', state='hidden', timeout=timeout_browser)
+            page.wait_for_selector('.geetest_item_wrap', state='hidden', timeout=3000)
             print("验证码正确")
             time.sleep(2)
-            if log:
+            if variables.log:
                 fname = os.path.basename(urlparse(unquote(url)).path)
-                true_path = os.path.join(true_dir, fname)
+                true_path = os.path.join(variables.path.true_path, fname)
                 with open(true_path, 'wb') as fp:
                     fp.write(content)
                 calc_accuracy()
             break
         except Exception as e:
             print('验证码错误',e)
-            if log:
+            if variables.log:
                 fname = os.path.basename(urlparse(unquote(url)).path)
-                false_path = os.path.join(false_dir, fname)
+                false_path = os.path.join(variables.path.false_path, fname)
                 with open(false_path, 'wb') as fp:
                     fp.write(content)
                 calc_accuracy()
-
-
-
-
-    context = page.context
-    context.storage_state(path=os.path.join('model', f'reporter{i}.json') )
     return
