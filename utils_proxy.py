@@ -15,10 +15,11 @@ def switch_proxy():
                 timeout=variables.timeout.request,
                 headers=headers
             )
+            print(response.text)
             response.raise_for_status()
             data = response.json()
 
-            variables.proxy_list = list(data.keys())
+            variables.Global.proxy_list = list(data.keys())
 
         except Exception as e:
             print(f"获取代理列表失败: {e}")
@@ -123,3 +124,5 @@ def switch_proxy():
         print(f"获取或关闭连接失败: {e}")
 
     return None
+
+
