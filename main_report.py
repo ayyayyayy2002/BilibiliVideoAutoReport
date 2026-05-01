@@ -1,9 +1,6 @@
 import json
 import string
-import time
-
 import variables
-from ml_load import load_yolo, load_siamese
 from utils_proxy import switch_proxy
 from utils_capcha import capcha
 from datetime import datetime
@@ -16,31 +13,28 @@ from tqdm import tqdm
 
 def report(pages):
     uids = set()
-    with open(os.path.join('model', 'reporter0.json'), "r", encoding="utf-8") as f:
+    with open(os.path.join(variables.path.cookie_path, '1.json'), "r", encoding="utf-8") as f:
         storage = json.load(f)
 
     cookies = storage.get("cookies", [])
-    # 只保留 domain 包含 .bilibili.com 的 cookie
     filtered = [c for c in cookies if ".bilibili.com" in c.get("domain", "")]
-    COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
+    cookies = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
 
     session = requests.Session()
     session.headers.update({
-        'user-agent': UA,
-        'cookie': COOKIE
+        'user-agent': variables.UA,
+        'cookie': cookies
     })
 
-    tids = list(tids_with_weights.keys())
-    weights = list(tids_with_weights.values())
+    tids = list(variables.tids_with_weights.keys())
+    weights = list(variables.tids_with_weights.values())
 
-    try:
-        for uid in open(uid_file, 'r', encoding='utf-8'):
-            uid = uid.strip()
-            if uid.isdigit():
-                uids.add(uid)
-    except Exception:
-        print("读取UID文件出错")
-        return "0"
+  
+    for uid in open(variables.path.uid_file, 'r', encoding='utf-8'):
+        uid = uid.strip()
+        if uid.isdigit():
+            uids.add(uid)
+
 
     if not uids:
         print("uid.txt 文件中没有可处理的UID，程序退出")
@@ -54,7 +48,7 @@ def report(pages):
         # ------------------- 动态视频部分 -------------------
         response = session.get(
             f'https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?offset=&host_mid={uid}&timezone_offset=-480&platform=web&type=video&features=itemOpusStyle,listOnlyfans,opusBigCover',
-            timeout=timeout_request, proxies=proxies)
+            timeout=variables.timeout.request, proxies=variables.clash.proxy)
         data = response.json()
         for item in data['data']['items']:
             major = item.get('modules', {}).get('module_dynamic', {}).get('major', {})
@@ -87,14 +81,14 @@ def report(pages):
         aids, titles, pics, durations, seasons = [], [], [], [], []
         response = session.get(
             f'https://api.bilibili.com/x/polymer/web-space/seasons_series_list?mid={uid}&page_size=20&page_num=1',
-            timeout=timeout_request, proxies=proxies)
+            timeout=variables.timeout.request, proxies=variables.clash.proxy)
         data = response.json()
         for season in data['data']['items_lists']['seasons_list']:
             seasons.append(season['meta']['season_id'])
         for season in seasons:
             response = session.get(
                 f'https://api.bilibili.com/x/polymer/web-space/seasons_archives_list?mid={uid}&season_id={season}&sort_reverse=false&page_size=30&page_num=1',
-                timeout=timeout_request, proxies=proxies)
+                timeout=variables.timeout.request, proxies=variables.clash.proxy)
             data = response.json()
             for archive in data['data']['archives']:
                 aids.append(archive['aid'])
@@ -110,7 +104,7 @@ def report(pages):
         # ------------------- 投稿视频部分 -------------------
         aids, titles, pics, durations, seasons = [], [], [], [], []
         response = session.get(f'https://api.bilibili.com/x/series/recArchivesByKeywords?mid={uid}&keywords=&ps=0',
-                               timeout=timeout_request, proxies=proxies)
+                               timeout=variables.timeout.request, proxies=variables.clash.proxy)
         data = response.json()
         for archive in data['data']['archives']:
             aids.append(archive['aid'])
@@ -122,27 +116,27 @@ def report(pages):
         items = list(zip(aids, titles, pics, durations))
         random.shuffle(items)
         reports.extend(items)
-        for i in range(0, accountcount):
+        for i in range(1, variables.accountcount):
+            file=os.path.join(variables.path.cookie_path, f'{i}.json')
             reportcount = 0
-            with open(os.path.join('model', f'reporter{i}.json'), "r", encoding="utf-8") as f:
+            with open(file, "r", encoding="utf-8") as f:
                 storage = json.load(f)
             cookies = storage.get("cookies", [])
             filtered = [c for c in cookies if ".bilibili.com" in c.get("domain", "")]
-            COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
-            CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
+            cookies = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
+            csrf = re.search(r'bili_jct=([^;]*)', cookies).group(1)
             session = requests.Session()
             session.headers.update({
-                'user-agent': UA,
-                'cookie': COOKIE
+                'user-agent': variables.UA,
+                'cookie': cookies
             })
             # ------------------- 开始举报 -------------------
             for aid, title, pic, duration in reports:
                 tid = random.choices(tids, weights=weights, k=1)[0]
-                # reason = random.choice(reasons)
-
+                reason = random.choice(variables.reasons)
                 chars = string.ascii_lowercase + string.digits
                 length = random.randint(1, 20)
-                reason = ''.join(random.choices(chars, k=length))
+                reason = reason+''.join(random.choices(chars, k=length))
 
                 duration = random.randint(1, duration)
                 m = duration // 60
@@ -173,7 +167,7 @@ def report(pages):
                     'aid': aid,
                     'attach': '',
                     'block_author': 'false',
-                    'csrf': CSRF,
+                    'csrf': csrf,
                     'desc': reason,
                     'meta': '',
                     'tid': f'{tid}'
@@ -182,7 +176,7 @@ def report(pages):
                     try:
                         response = session.post(
                             'https://api.bilibili.com/x/web-interface/appeal/v2/submit?x-bili-locale-json=%7B%22c_locale%22:%7B%22language%22:%22zh%22,%22region%22:%22CN%22%7D,%22always_translate%22:true%7D', data=data,
-                            timeout=variables.timeout.request, proxies=variables.proxy, headers=headers
+                            timeout=variables.timeout.request, proxies=variables.clash.proxy, headers=headers
                         )
                         # print(response.request.headers)
                         break
@@ -209,17 +203,17 @@ def report(pages):
                             switch_proxy()
                     capcha(pages[i], i)
                     context = pages[i].context
-                    context.storage_state(path=os.path.join(variables.path.cookie_path, f'{i}.json'))
-                    with open(os.path.join(variables.path.cookie_path, f'{i}.json'), "r", encoding="utf-8") as f:
+                    context.storage_state(path=file)
+                    with open(file, "r", encoding="utf-8") as f:
                         storage = json.load(f)
                     cookies = storage.get("cookies", [])
                     filtered = [c for c in cookies if ".bilibili.com" in c.get("domain", "")]
-                    COOKIE = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
-                    CSRF = re.search(r'bili_jct=([^;]*)', COOKIE).group(1)
+                    cookies = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
+                    csrf = re.search(r'bili_jct=([^;]*)', cookies).group(1)
                     session = requests.Session()
                     session.headers.update({
-                        'user-agent': UA,
-                        'cookie': COOKIE
+                        'user-agent': variables.UA,
+                        'cookie': cookies
                     })
                 elif "412" in response.text:
                     print('报错412，切换代理')
@@ -231,14 +225,13 @@ def report(pages):
                     print(
                         f'账号{i}, 视频{reportcount:03}:{response.text}\nhttps://www.bilibili.com/video/av{aid}\n{title}\n')
 
-        try:
-            lines = open(uid_file, 'r', encoding='utf-8').readlines()
-            with open(uid_file, 'w', encoding='utf-8') as f:
-                for line in lines:
-                    if line.strip() != uid:
-                        f.write(line)
-            print(f"删除UID: {uid}")
-        except Exception as e:
-            return f"删除UID时发生错误: {e}"
+
+        lines = open(variables.path.uid_file, 'r', encoding='utf-8').readlines()
+        with open(variables.path.uid_file, 'w', encoding='utf-8') as f:
+            for line in lines:
+                if line.strip() != uid:
+                    f.write(line)
+        print(f"删除UID: {uid}")
+   
 
     return "0"
