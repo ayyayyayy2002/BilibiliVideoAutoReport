@@ -1,4 +1,8 @@
 import json
+import string
+import time
+
+import variables
 from ml_load import load_yolo, load_siamese
 from utils_proxy import switch_proxy
 from utils_capcha import capcha
@@ -8,12 +12,9 @@ import random
 import re
 import os
 from tqdm import tqdm
-from variables import yolo_file, siamese_file, proxies, UA, uid_file, limit, tids_with_weights, timeout_request, reasons, skip, accountcount
 
 
 def report(pages):
-    YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS = load_yolo(yolo_file)
-    SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS = load_siamese(siamese_file)
     uids = set()
     with open(os.path.join('model', 'reporter0.json'), "r", encoding="utf-8") as f:
         storage = json.load(f)
@@ -137,7 +138,12 @@ def report(pages):
             # ------------------- 开始举报 -------------------
             for aid, title, pic, duration in reports:
                 tid = random.choices(tids, weights=weights, k=1)[0]
-                reason = random.choice(reasons)
+                # reason = random.choice(reasons)
+
+                chars = string.ascii_lowercase + string.digits
+                length = random.randint(1, 20)
+                reason = ''.join(random.choices(chars, k=length))
+
                 duration = random.randint(1, duration)
                 m = duration // 60
                 s = duration % 60
@@ -147,10 +153,25 @@ def report(pages):
                     duration = f"{s}秒"
                 reason = reason.replace("title", title).replace("duration", duration)
                 reportcount += 1
-                pic = pic.replace("http:", "")
+                #pic = pic.replace("http:", "")
+                headers = {
+                    'accept': '*/*',
+                    'accept-language': 'zh-CN,zh;q=0.9',
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'dnt': '1',
+                    'origin': 'https://www.bilibili.com',
+                    'priority': 'u=1, i',
+                    'referer': 'https://www.bilibili.com/',
+                    'sec-ch-ua': '"Not(A:Brand";v="8", "Chromium";v="144", "Google Chrome";v="144"',
+                    'sec-ch-ua-mobile': '?0',
+                    'sec-ch-ua-platform': '"Windows"',
+                    'sec-fetch-dest': 'empty',
+                    'sec-fetch-mode': 'cors',
+                    'sec-fetch-site': 'same-site',
+                }
                 data = {
                     'aid': aid,
-                    'attach': pic,
+                    'attach': '',
                     'block_author': 'false',
                     'csrf': CSRF,
                     'desc': reason,
@@ -160,31 +181,36 @@ def report(pages):
                 while True:
                     try:
                         response = session.post(
-                            'https://api.bilibili.com/x/web-interface/appeal/v2/submit', data=data,
-                            timeout=timeout_request, proxies=proxies)
+                            'https://api.bilibili.com/x/web-interface/appeal/v2/submit?x-bili-locale-json=%7B%22c_locale%22:%7B%22language%22:%22zh%22,%22region%22:%22CN%22%7D,%22always_translate%22:true%7D', data=data,
+                            timeout=variables.timeout.request, proxies=variables.proxy, headers=headers
+                        )
+                        # print(response.request.headers)
                         break
                     except Exception as e:
                         print(e)
                         switch_proxy()
 
-                if "重复" in response.text and skip or reportcount >= limit:
-                    print(
-                        f'账号{i}, 视频{reportcount:03}:{response.text}\nhttps://www.bilibili.com/video/av{aid}\n{title}\n')
+                if "重复" in response.text  or reportcount >=variables.limit:
+                    print(f'账号{i}, 视频{reportcount:03}:{response.text}\nhttps://www.bilibili.com/video/av{aid}\n{title}\n')
                     break
                 elif "-352" in response.text:
-                    print(
-                        f'账号{i}, 视频{reportcount:03}:{response.text}\nhttps://www.bilibili.com/video/av{aid}\n{title}\n')
-                    capcha(
-                        aid, pages[i],
-                        i,
-                        YOLO_MODEL,
-                        YOLO_INPUTS,
-                        YOLO_OUTPUTS,
-                        SIAMESE_MODEL,
-                        SIAMESE_INPUTS,
-                        SIAMESE_OUTPUTS
-                    )
-                    with open(os.path.join('model', f'reporter{i}.json'), "r", encoding="utf-8") as f:
+                    print(f'账号{i}, 视频{reportcount:03}:{response.text}\nhttps://www.bilibili.com/video/av{aid}\n{title}\n')
+                    while True:
+                        try:
+                            url = f"https://www.bilibili.com/appeal/?avid={aid}"
+                            pages[i].goto(url, wait_until="domcontentloaded", timeout=variables.timeout.browser)
+                            pages[i].locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div/div/div[2]').click(timeout=variables.timeout.browser)
+                            pages[i].locator('xpath=/html/body/div/div[2]/div[2]/div[2]/div[1]/div[2]/label/div[2]/textarea').fill('视频封面标题以及内容违规')
+                            pages[i].locator('xpath=/html/body/div/div[3]/div[2]').click(timeout=variables.timeout.browser)
+                            pages[i].wait_for_selector('.geetest_item_wrap', timeout=variables.timeout.browser)
+                            break
+                        except Exception as e:
+                            print("验证码元素未出现", e)
+                            switch_proxy()
+                    capcha(pages[i], i)
+                    context = pages[i].context
+                    context.storage_state(path=os.path.join(variables.path.cookie_path, f'{i}.json'))
+                    with open(os.path.join(variables.path.cookie_path, f'{i}.json'), "r", encoding="utf-8") as f:
                         storage = json.load(f)
                     cookies = storage.get("cookies", [])
                     filtered = [c for c in cookies if ".bilibili.com" in c.get("domain", "")]
