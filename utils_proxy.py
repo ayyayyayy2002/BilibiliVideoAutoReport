@@ -90,7 +90,7 @@ def switch_proxy():
         return None, None
 
     # ====================== 4. 再关闭指定 host 的连接 ======================
-    print("正在关闭 host 包含 api.bili 的连接...")
+    print("正在关闭 host 包含 bili 的连接...")
 
     conn_url = f"{variables.clash.url_api}/connections"
 
