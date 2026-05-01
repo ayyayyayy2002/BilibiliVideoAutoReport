@@ -1,7 +1,7 @@
 import os
 from tqdm import tqdm
 from utils_chrome import start_browser
-from variables import uid_file, CLASH_PROXY_URL, UA, black_file
+
 
 
 def checkuid():
@@ -35,7 +35,7 @@ def checkuid():
     try:
         for uid in tqdm(uids):
             url = f'https://space.bilibili.com/{uid}/dynamic'
-            print(f"打开UID：{uid}")
+            print(f"打开UID：https://space.bilibili.com/{uid}/dynamic")
             page.goto(url)
 
             print("请按回车继续...")
