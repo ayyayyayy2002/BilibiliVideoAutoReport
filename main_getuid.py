@@ -20,7 +20,7 @@ def getuid():
         cookies = "; ".join(f"{c['name']}={c['value']}" for c in filtered)
         print(f'稍后再看：账号{i}')
         headers = {'cookie': cookies, 'user-agent': variables.UA}
-        response = requests.get('https://api.bilibili.com/x/v2/history/toview', headers=headers, proxies=proxies, timeout=timeout_request)
+        response = requests.get('https://api.bilibili.com/x/v2/history/toview', headers=headers, proxies=variables.clash.proxy, timeout=variables.timeout.request)
         data = response.json()
         for item in data['data']['list']:
             mid = item['owner']['mid']
