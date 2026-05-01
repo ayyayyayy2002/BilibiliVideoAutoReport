@@ -11,8 +11,7 @@ from ml_yolo import run_yolo
 from utils_accuracy import calc_accuracy
 from utils_capcha import crop_detections
 from utils_chrome import start_browser
-from variables import yolo_file, siamese_file, false_dir, true_dir, timeout_browser, timeout_request, CLASH_PROXY_URL, \
-    UA
+
 
 
 def benchmark():
