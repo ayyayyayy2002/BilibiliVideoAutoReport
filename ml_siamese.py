@@ -1,5 +1,7 @@
 import cv2
 import numpy
+
+import variables
 from ml_load import load_siamese
 
 # ===== 工具函数 =====
@@ -16,7 +18,7 @@ def preprocess(img, target_size=(105, 105)):
 
     return img
 
-def run_siamese(a_imgs, b_imgs,SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
+def run_siamese(a_imgs, b_imgs):
     """输入多张 A 图像对象、多张 B 图像对象，输出二维数组：
        每个 A 对应一个列表，列表里是该 A 与所有 B 的相似度
     """
@@ -32,9 +34,9 @@ def run_siamese(a_imgs, b_imgs,SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS):
     b_data = numpy.stack([p[1] for p in pairs], axis=0)
 
     # 模型推理
-    results = SIAMESE_MODEL.run(
-        [SIAMESE_OUTPUTS],
-        {SIAMESE_INPUTS[0]: a_data, SIAMESE_INPUTS[1]: b_data}
+    results = variables.Global.SIAMESE_MODEL.run(
+        [variables.Global.SIAMESE_OUTPUTS],
+        {variables.Global.SIAMESE_INPUTS[0]: a_data, variables.Global.SIAMESE_INPUTS[1]: b_data}
     )[0]
     results = results.squeeze(axis=1)  # shape (N,)
 
