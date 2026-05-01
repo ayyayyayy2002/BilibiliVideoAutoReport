@@ -34,23 +34,26 @@
 ## 🚀 使用方法
 1. 下载[整个项目](https://github.com/ayyayyayy2002/BilibiliVideoAutoReport/archive/refs/heads/main.zip)并解压到任意目录
 2. 下载安装[Python 3.10.11](https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe)
-3. 下载并解压[chrome-win](https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Win_x64%2F1230501%2Fchrome-win.zip?generation=1701250567654085&alt=media)到 list 文件夹
-4. 双击并运行`1环境.bat`等待完全配置完成,失败请开启代理重试
-5. 双击并运行`2运行.bat`用数字键选择功能
+3. 下载并解压[chrome-win](https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Win_x64%2F1230501%2Fchrome-win.zip?generation=1701250567654085&alt=media)到 file 文件夹
+4. 在项目文件夹地址栏输入`cmd`回车,打开命令窗口
+5. 在命令窗口输入`python -m venv .venv`并回车,创建虚拟环境
+6. 输入`.venv\Scripts\python.exe -m pip install -r requirements.txt`并回车安装依赖,可能需要代理
+7. 双击并运行`运行.bat`用数字键选择功能
+
 
 ### 一、账号角色说明
+* **0.json（采集账号）**
+  仅用于采集B站稍后再看列表，不参与任何举报行为
 
-* **Reportern（举报账号）**
-  实际执行举报操作的账号
+* **其他账号都是举报账号**
+  实际执行举报操作的账号,也用于采集B站稍后再看列表和获取待举报视频
 
-* **Collector（采集账号）**
-  仅用于采集视频或 UP 信息，不参与任何举报行为
 
 ---
 
 ### 二、名单规则说明
 
-* **稍后再看列表**
+* **B站稍后再看列表**
 
   * 列表内的 **UP 主会自动加入举报名单**
 
