@@ -1,6 +1,6 @@
 import os
 
-from variables import true_dir, false_dir
+import variables
 
 
 def calc_accuracy():
