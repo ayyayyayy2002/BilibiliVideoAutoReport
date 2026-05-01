@@ -5,7 +5,6 @@ from ml_siamese import run_siamese
 from ml_yolo import run_yolo
 from tqdm import tqdm
 from utils_capcha import crop_detections
-from variables import true_dir, yolo_file, siamese_file,  false_dir
 
 
 def cut():
