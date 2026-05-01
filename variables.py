@@ -1,8 +1,9 @@
 # 全局变量
 class Global:
-    proxy_list = None # 代理节点列表
-    proxy_current = None # 当前节点
-    count = None # 举报账号个数
+    proxy_list = None  # 代理节点列表
+    proxy_current = None  # 当前节点
+    YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS = None, None, None # YOLO模型
+    SIAMESE_MODEL, SIAMESE_INPUTS, SIAMESE_OUTPUTS = None, None, None # Siamese模型
 
 
 # 文件路径
@@ -13,7 +14,7 @@ class path:
     white_file = "file/white.txt"  # 白名单UID
     black_file = "file/black.txt"  # 黑名单UID
     keyword_file = "file/keyword.txt"  # 关键字列表
-    account_file = "file/account.txt"  #账号密码
+    account_file = "file/account.txt"  # 账号密码
     chrome_file = "file/chrome-win/chrome.exe"  # Chrome 可执行文件
     true_path = "file/true"  # 成功操作记录
     false_path = "file/false"  # 失败操作记录
@@ -41,7 +42,7 @@ class clash:
 # 其他参数
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36'
 limit = 300  # 单个UID最大举报次数
-
+accountcount = 2  # 总账号个数
 skip = True  # 已举报提示后是否跳过该目标
 log = False  # 验证码记录 举报记录开关
 cycle = 0  # 循环次数（可用于多轮操作）
