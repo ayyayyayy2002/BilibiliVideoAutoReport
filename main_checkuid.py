@@ -1,14 +1,15 @@
 import os
 from tqdm import tqdm
-from utils_chrome import start_browser
 
+import variables
+from utils_chrome import start_browser
 
 
 def checkuid():
     uids = []
 
     try:
-        with open(black_file, 'r', encoding='utf-8') as file:
+        with open(variables.path.black_file, 'r', encoding='utf-8') as file:
             for line in file:
                 line = line.strip()
                 if line.isdigit():
@@ -22,10 +23,10 @@ def checkuid():
         return "0"
 
     # 使用 Playwright 启动浏览器
-    storage_state = os.path.join('model', f'reporter0.json')  if os.path.exists(os.path.join('model', f'reporter0.json') ) else None
-    playwright, browser= start_browser(headless=False, proxy_url=CLASH_PROXY_URL)
+    storage_state = os.path.join('model', f'reporter0.json') if os.path.exists(os.path.join('model', f'reporter0.json')) else None
+    playwright, browser = start_browser(headless=False, proxy_url=variables.clash.url_proxy)
     context_options = {
-        "user_agent": UA,
+        "user_agent": variables.UA,
         "storage_state": storage_state
     }
     context = browser.new_context(**context_options)
