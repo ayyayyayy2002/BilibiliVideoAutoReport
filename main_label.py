@@ -4,7 +4,7 @@ from ml_load import load_yolo
 from ml_yolo import run_yolo
 from tqdm import tqdm
 
-from variables import true_dir, yolo_file
+
 
 
 def save_yolo_labels(img_path, classA, classB):
