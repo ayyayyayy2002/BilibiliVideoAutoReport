@@ -3,7 +3,6 @@ import requests
 import re
 import os
 
-from variables import uid_file, black_file, white_file, keywords_file, UA, collector_cookie_file,timeout_request,proxies
 
 
 def getuid():
@@ -80,14 +79,14 @@ def getuid():
             headers = {'cookie': reporter_cookie, 'user-agent': UA}
             print(f"正在搜索关键词：{keyword}")
             response = requests.get(
-                f'https://api.bilibili.com/x/web-interface/search/type?keyword={keyword}&search_type=video',headers=headers, proxies=proxies, timeout=timeout_request)
+                f'https://api.bilibili.com/x/web-interface/search/type?keyword={keyword}&search_type=video&order=pubdate',headers=headers, proxies=proxies, timeout=timeout_request)
             data = response.json()
             for item in data.get("data", {}).get("result", []):
                 mid = item.get("mid")
                 if mid is not None:
                     lists.add(str(mid))
                     mids.add(str(mid))
-                if len(mids) >= 10:
+                if len(mids) >= 30:
                     break
             print(f"搜索结果：{mids}")
 
