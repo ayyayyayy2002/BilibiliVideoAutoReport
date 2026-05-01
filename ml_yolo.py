@@ -1,5 +1,7 @@
 import numpy as np
 import cv2
+
+import variables
 from ml_load import load_yolo
 
 
@@ -43,13 +45,13 @@ def nms(detections, iou_th):
 
 
 # ===== 模型加载与推理 =====
-def run_yolo(img,YOLO_MODEL, YOLO_INPUTS, YOLO_OUTPUTS):
+def run_yolo(img):
 
     img = pad_top_left(img, 640, 640)
     data = preprocess(img)
 
     # 推理
-    preds = YOLO_MODEL.run([YOLO_OUTPUTS], {YOLO_INPUTS: data})[0]  # shape (1, 25200, 7)
+    preds = variables.Global.YOLO_MODEL.run([variables.Global.YOLO_OUTPUTS], {variables.Global.YOLO_INPUTS: data})[0]  # shape (1, 25200, 7)
     preds = preds[0]
 
     detections = []
