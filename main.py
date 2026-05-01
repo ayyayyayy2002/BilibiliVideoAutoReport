@@ -37,7 +37,7 @@ def main():
         variables.Global.YOLO_MODEL, variables.Global.YOLO_INPUTS, variables.Global.YOLO_OUTPUTS = load_yolo(variables.path.yolo_file)
         variables.Global.SIAMESE_MODEL, variables.Global.SIAMESE_INPUTS, variables.Global.SIAMESE_OUTPUTS = load_siamese(variables.path.siamese_file)
         pages = [""]
-        playwright, browser = start_browser(headless=True, proxy_url=variables.clash.url_proxy)
+        playwright, browser = start_browser(headless=False, proxy_url=variables.clash.url_proxy)
         for i in range(1, variables.accountcount):
             context_options = {
                 "user_agent": variables.UA,
