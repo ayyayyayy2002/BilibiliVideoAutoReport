@@ -27,31 +27,6 @@ def getuid():
             lists.add(str(mid))
             print(mid)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     # ------------------ 合并黑白名单 ------------------
     for file_path in [variables.path.black_file, variables.path.white_file]:
         if os.path.exists(file_path):
