@@ -23,11 +23,11 @@ def checkuid():
         return "0"
 
     # 使用 Playwright 启动浏览器
-    storage_state = os.path.join('model', f'reporter0.json') if os.path.exists(os.path.join('model', f'reporter0.json')) else None
-    playwright, browser = start_browser(headless=False, proxy_url=variables.clash.url_proxy)
+    storage_state =os.path.join(variables.path.cookie_path, '1.json')
+    playwright, browser = start_browser(headless=False)
     context_options = {
         "user_agent": variables.UA,
-        "storage_state": storage_state
+        "storage_state": storage_state if os.path.exists(storage_state) else None
     }
     context = browser.new_context(**context_options)
     page = context.new_page()
